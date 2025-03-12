@@ -1,0 +1,102 @@
+@startuml
+' -------------------
+' Interfaces
+' -------------------
+interface IItem {
+  +Name : string
+  +Symbol : char
+  +GetDisplayName() : string
+  +EquipPlayer(player : Player) : void
+  +UnequipPlayer(player : Player) : void
+  +PickUp(player : Player, room : Room) : void
+}
+
+interface IWeapon extends IItem {
+  +Damage : int
+  +IsTwoHanded : bool
+}
+
+' -------------------
+' Abstract Classes for Items
+' -------------------
+abstract class ItemBaseClass {
+  +Name : string
+  +Symbol : char
+  +GetDisplayName() : string
+  +EquipPlayer(player : Player) : void
+  +UnequipPlayer(player : Player) : void
+  +PickUp(player : Player, room : Room) : void
+}
+ItemBaseClass ..|> IItem
+
+abstract class WeaponBaseClass {
+  +Damage : int
+  +IsTwoHanded : bool
+}
+WeaponBaseClass ..|> ItemBaseClass
+WeaponBaseClass ..|> IWeapon
+
+' -------------------
+' Abstract Class for Weapon Decorators
+' -------------------
+abstract class WeaponDecoratorBaseClass {
+  #wrappedWeapon : IWeapon
+  +GetDisplayName() : string
+  +EquipPlayer(player : Player) : void
+  +UnequipPlayer(player : Player) : void
+  +Damage : int
+}
+WeaponDecoratorBaseClass ..|> WeaponBaseClass
+WeaponDecoratorBaseClass ..|> IWeapon
+
+' -------------------
+' Concrete Weapon Decorators
+' -------------------
+class AggressiveDecorator
+class PowerfulDecorator
+class UnluckyDecorator
+
+AggressiveDecorator --|> WeaponDecoratorBaseClass
+PowerfulDecorator --|> WeaponDecoratorBaseClass
+UnluckyDecorator --|> WeaponDecoratorBaseClass
+
+' -------------------
+' Concrete Weapons
+' -------------------
+class VerbalAbuse
+class Gun
+class 2HandedSword
+
+VerbalAbuse --|> WeaponBaseClass
+Gun --|> WeaponBaseClass
+2HandedSword --|> WeaponBaseClass
+
+' -------------------
+' Concrete Unusable Items
+' -------------------
+class Book
+class Elixir
+class Ring
+
+Book --|> ItemBaseClass
+Elixir --|> ItemBaseClass
+Ring --|> ItemBaseClass
+
+' -------------------
+' Concrete Currencies
+' -------------------
+class Coin
+class Gold
+
+Coin --|> ItemBaseClass
+Gold --|> ItemBaseClass
+
+' -------------------
+' Other Classes
+' -------------------
+class Cell
+class Game
+class Room
+class Player
+class Program
+@enduml
