@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RPG_Game.Decorators
 {
-    public abstract class WeaponDecoratorBaseClass: WeaponBaseClass, IWeapon
+    public abstract class WeaponDecoratorBaseClass: WeaponBaseClass, IWeapon // po samym IWeapon musi być dziedziczenie
     {
         protected IWeapon wrappedWeapon;
         protected WeaponDecoratorBaseClass(IWeapon weapon): base(weapon.Name, weapon.Symbol, weapon.Damage, weapon.IsTwoHanded)
@@ -19,6 +19,8 @@ namespace RPG_Game.Decorators
         public override void EquipPlayer(Player player) => wrappedWeapon.EquipPlayer(player);
         public override void UnequipPlayer(Player player) => wrappedWeapon.UnequipPlayer(player);
         public override int Damage => wrappedWeapon.Damage;
+
+        // + public override bool isTwoHanded
 
     }
 }

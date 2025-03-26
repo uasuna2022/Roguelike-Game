@@ -13,7 +13,5 @@ namespace RPG_Game.Items.UnusableItems
         {
             Description = description;
         }
-
-        
     }
 }

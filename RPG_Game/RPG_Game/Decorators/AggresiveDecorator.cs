@@ -19,7 +19,7 @@ namespace RPG_Game.Decorators
             base.EquipPlayer(player);
             player.Aggression += 3;
             player.Strength += 3;
-            Console.WriteLine($"Equipped with {this.GetDisplayName()}");
+            GameDisplayer.Instance.AddNotification($"Equipped with {this.GetDisplayName()}");
         }
 
         public override void UnequipPlayer(Player player)
@@ -27,7 +27,7 @@ namespace RPG_Game.Decorators
             base.UnequipPlayer(player);
             player.Aggression -= 3;
             player.Strength -= 3;
-            Console.WriteLine($"Unequipped with {this.GetDisplayName()}");
+            GameDisplayer.Instance.AddNotification($"Unequipped with {this.GetDisplayName()}");
         }
     }
 }

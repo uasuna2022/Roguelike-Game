@@ -14,6 +14,7 @@ namespace RPG_Game
         public int Strength { get; set; }
         public int Dexterity {  get; set; }
         public int Health { get; set; }
+        private int _maxHealth { get; }
         public int Luck { get; set; }
         public int Aggression { get; set; }
         public int Wisdom {  get; set; }
@@ -30,7 +31,8 @@ namespace RPG_Game
             Y = 0;
             Strength = 20;
             Dexterity = 20;
-            Health = 100;
+            Health = 30;
+            _maxHealth = 100;
             Luck = 0;
             Aggression = 0;
             Wisdom = 0;
@@ -42,11 +44,13 @@ namespace RPG_Game
             Gold = 0;
         }
 
+        public int GetMaxHealth => _maxHealth;
+
         private bool isValidMove(int newX, int newY, Room room)
         {
             if (newX < 0 || newY < 0 || newX >= room.Height || newY >= room.Width) return false;
             Cell possibleCell = room.GetCell(newX, newY);
-            if (possibleCell.isWall == true) return false;
+            if (possibleCell.isWall == true || possibleCell.Enemy != null) return false;
             else return true;
         }
         public void Move (char direction, Room room)
@@ -73,6 +77,7 @@ namespace RPG_Game
 
             if (isValidMove(newX, newY, room))
             {
+                
                 X = newX;
                 Y = newY;
             }
@@ -85,12 +90,12 @@ namespace RPG_Game
             {
                 Inventory.Add(item);
                 room.Grid[X, Y].RemoveTopItem();
-                Console.WriteLine($"Picked up an item: {item.GetDisplayName()}");
+                GameDisplayer.Instance.AddNotification($"Picked up an item: {item.GetDisplayName()}");
             }
 
             else
             {
-                Console.WriteLine($"The inventory is full! ({_maxInventorySize} out of {_maxInventorySize})");
+                GameDisplayer.Instance.AddNotification($"The inventory is full! ({_maxInventorySize} out of {_maxInventorySize})");
             }
         }
         public void PickUpItem (Room room)
@@ -103,13 +108,13 @@ namespace RPG_Game
                 pickedItem.PickUp(this, room);
             }
 
-            else Console.WriteLine("The cell is currently empty!");
+            else GameDisplayer.Instance.AddNotification("The cell is currently empty!");
         }
         public void DropItem (IItem item, Room room)
         {
             if (!Inventory.Contains(item))
             {
-                Console.WriteLine($"You don't have this item in your inventory!");
+                GameDisplayer.Instance.AddNotification($"You don't have this item in your inventory!");
                 return;
             }
 
@@ -118,7 +123,7 @@ namespace RPG_Game
                 Inventory.Remove(item);
                 Cell currentCell = room.GetCell(X, Y);
                 currentCell.AddItem(item);
-                Console.WriteLine($"Dropped: {item.GetDisplayName()}");
+                GameDisplayer.Instance.AddNotification($"Dropped: {item.GetDisplayName()}");
             }
         }
 
@@ -126,13 +131,13 @@ namespace RPG_Game
         {
             if (!Inventory.Contains(weapon))
             {
-                Console.WriteLine($"You don't have {weapon.GetDisplayName()} item in your inventory!");
+                GameDisplayer.Instance.AddNotification($"You don't have {weapon.GetDisplayName()} item in your inventory!");
                 return;
             }
 
             if (LeftHand != null && RightHand != null)
             {
-                Console.WriteLine($"Both of your arms are equipped... Unequip one of them to be able to reequip it.");
+                GameDisplayer.Instance.AddNotification($"Both of your arms are equipped... Unequip one of them to be able to reequip it.");
                 return;
             }
 
@@ -143,7 +148,7 @@ namespace RPG_Game
                     Inventory.Remove(weapon);
                     LeftHand = weapon;
                     weapon.EquipPlayer(this);
-                    Console.WriteLine($"Left hand equipped with an item: {weapon.GetDisplayName()}");
+                    GameDisplayer.Instance.AddNotification($"Left hand equipped with an item: {weapon.GetDisplayName()}");
                     return;
                 }
 
@@ -152,7 +157,7 @@ namespace RPG_Game
                     Inventory.Remove(weapon);
                     RightHand = weapon;
                     weapon.EquipPlayer(this);
-                    Console.WriteLine($"Right hand equipped with an item: {weapon.GetDisplayName()}");
+                    GameDisplayer.Instance.AddNotification($"Right hand equipped with an item: {weapon.GetDisplayName()}");
                     return;
                 }
             }
@@ -161,7 +166,7 @@ namespace RPG_Game
             {
                 if (LeftHand != null || RightHand != null)
                 {
-                    Console.WriteLine($"One of your arms is already equipped. You can't equip a two-handed weapon then.");
+                    GameDisplayer.Instance.AddNotification($"One of your arms is already equipped. You can't equip a two-handed weapon then.");
                     return;
                 }
 
@@ -171,7 +176,7 @@ namespace RPG_Game
                     RightHand = weapon;
                     LeftHand = weapon;
                     weapon.EquipPlayer(this);
-                    Console.WriteLine($"Both of your arms equipped with an item: {weapon.GetDisplayName()}");
+                    GameDisplayer.Instance.AddNotification($"Both of your arms equipped with an item: {weapon.GetDisplayName()}");
                     return;
                 }
             }
@@ -185,13 +190,13 @@ namespace RPG_Game
                 if (Inventory.Count < _maxInventorySize)
                 {
                     Inventory.Add(LeftHand);
-                    Console.WriteLine($"Two-handed weapon {LeftHand.GetDisplayName()} moved back to inventory!");
+                    GameDisplayer.Instance.AddNotification($"Two-handed weapon {LeftHand.GetDisplayName()} moved back to inventory!");
                 }
 
                 else
                 {
                     DropItem(LeftHand, room);
-                    Console.WriteLine($"Your inventory is full! The {LeftHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
+                    GameDisplayer.Instance.AddNotification($"Your inventory is full! The {LeftHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
                 }
                 
                 LeftHand = null;
@@ -203,7 +208,7 @@ namespace RPG_Game
             {
                 if (LeftHand == null)
                 {
-                    Console.WriteLine($"You can't unequip left hand - it's free");
+                    GameDisplayer.Instance.AddNotification($"You can't unequip left hand - it's free");
                     return;
                 }
 
@@ -212,13 +217,13 @@ namespace RPG_Game
                     if (Inventory.Count < _maxInventorySize)
                     {
                         Inventory.Add(LeftHand);
-                        Console.WriteLine($"Left hand is uneqipped. {LeftHand.GetDisplayName()} moved back to inventory!");
+                        GameDisplayer.Instance.AddNotification($"Left hand is uneqipped. {LeftHand.GetDisplayName()} moved back to inventory!");
 
                     }
                     else
                     {
                         DropItem(LeftHand, room);
-                        Console.WriteLine($"Your inventory is full! The {LeftHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
+                        GameDisplayer.Instance.AddNotification($"Your inventory is full! The {LeftHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
                     }
                     LeftHand.UnequipPlayer(this);
                     LeftHand = null;
@@ -230,7 +235,7 @@ namespace RPG_Game
             {
                 if (RightHand == null)
                 {
-                    Console.WriteLine($"You can't unequip right hand - it's free");
+                    GameDisplayer.Instance.AddNotification($"You can't unequip right hand - it's free");
                     return;
                 }
 
@@ -239,13 +244,13 @@ namespace RPG_Game
                     if (Inventory.Count < _maxInventorySize)
                     {
                         Inventory.Add(RightHand);
-                        Console.WriteLine($"Right hand is uneqipped. {RightHand} moved back to inventory!");
+                        GameDisplayer.Instance.AddNotification($"Right hand is uneqipped. {RightHand} moved back to inventory!");
 
                     }
                     else
                     {
                         DropItem(RightHand, room);
-                        Console.WriteLine($"Your inventory is full! The {RightHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
+                        GameDisplayer.Instance.AddNotification($"Your inventory is full! The {RightHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
                     }
                     RightHand.UnequipPlayer(this);
                     RightHand = null;
@@ -255,7 +260,7 @@ namespace RPG_Game
         }       
         public void PrintInventory()
         {
-            Console.WriteLine("Player's inventory:");
+            GameDisplayer.Instance.AddNotification("Player's inventory:");
 
             if (Inventory.Count == 0)
             {
@@ -266,14 +271,14 @@ namespace RPG_Game
             int i = 1;
             foreach (var item in Inventory)
             {
-                Console.WriteLine($"{i}) {item.GetDisplayName()}");
+                GameDisplayer.Instance.AddNotification($"{i}) {item.GetDisplayName()}");
                 i++;
             }
             return;
         }
         public void PrintEquippedItems()
         {
-            Console.WriteLine("Equipped items:");
+            GameDisplayer.Instance.AddNotification("Equipped items:");
             if (LeftHand == null)
             {
                 Console.WriteLine("Left Hand: empty");

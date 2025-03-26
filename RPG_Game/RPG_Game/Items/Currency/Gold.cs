@@ -21,7 +21,7 @@ namespace RPG_Game.Items.Currency
         {
             player.Gold += Amount;
             room.Grid[player.X, player.Y].RemoveTopItem();
-            Console.WriteLine($"Picked up {Amount} of Gold!");
+            GameDisplayer.Instance.AddNotification($"Picked up {Amount} of Gold!");
         }
     }
 }

@@ -15,6 +15,7 @@ namespace RPG_Game
         public bool isWall {  get; set; }
 
         private Stack<IItem> _items;
+        public IEnemy? Enemy { get; set; }
         public bool ContainsPlayer {  get; set; }
         public Cell (int x, int y)
         {
@@ -27,6 +28,10 @@ namespace RPG_Game
         public void AddItem(IItem item)
         {
             _items.Push(item);
+        }
+        public void AddEnemy(IEnemy enemy)
+        {
+            Enemy = enemy; 
         }
         public void RemoveTopItem()
         {
