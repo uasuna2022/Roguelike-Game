@@ -10,55 +10,21 @@ namespace RPG_Game
 {
     public class Director
     {
-        private readonly IBuilder _builder;
-        private readonly InstructionBuilder _instructionBuilder;
-        public Director(IBuilder builder)
+        public Director() { }
+        public void BuildDungeonWithoutWalls(CompositeBuilder compositeBuilder)
         {
-            _builder = builder;
-            _instructionBuilder = new InstructionBuilder();
+            compositeBuilder.BuildEmptyDungeon().AddItems().AddWeapons().AddModifiedWeapons().
+                AddEnemies().AddPotions();
         }
-        public void BuildDungeonWithoutWalls()
+        public void BuildBasicDungeonWithWalls(CompositeBuilder compositeBuilder) // 'basic' means without modified weapons, potions and enemies
         {
-            _builder.BuildEmptyDungeon();
-            _builder.AddItems();
-            _builder.AddWeapons();
-            _builder.AddModifiedWeapons();
-            _builder.AddEnemies();
-            _builder.AddPotions();
-            _instructionBuilder.AddBasicControls();
-            _instructionBuilder.AddWeaponInstructions();
-            _instructionBuilder.AddItemInstructions();
+            compositeBuilder.BuildFilledDungeon().AddItems().AddWeapons().AddPaths().
+                AddChambers().AddCentralRoom();
         }
-        public void BuildBasicDungeonWithWalls() // 'basic' means without modified weapons, potions and enemies
+        public void BuildFullDungeonWithWalls(CompositeBuilder compositeBuilder) // 'full' means with all the possible items/enemies/etc.
         {
-            _builder.BuildFilledDungeon();
-            _builder.AddCentralRoom();
-            _builder.AddChambers();
-            _builder.AddPaths();
-            _builder.AddWeapons();
-            _builder.AddItems();
-            _instructionBuilder.AddBasicControls();
-            _instructionBuilder.AddWeaponInstructions();
-            _instructionBuilder.AddItemInstructions();
-        }
-        public void BuildFullDungeonWithWalls() // 'full' means with all the possible items/enemies/etc.
-        {
-            _builder.BuildFilledDungeon();
-            _builder.AddCentralRoom();
-            _builder.AddChambers();
-            _builder.AddPaths();
-            _builder.AddWeapons();
-            _builder.AddItems();
-            _builder.AddEnemies();
-            _builder.AddModifiedWeapons();
-            _builder.AddPotions();
-            _instructionBuilder.AddBasicControls();
-            _instructionBuilder.AddWeaponInstructions();
-            _instructionBuilder.AddItemInstructions();
-        }
-        public (Room, string) GetFinalResult()
-        {
-            return (_builder.GetFinalResult(), _instructionBuilder.Build());
+            compositeBuilder.BuildFilledDungeon().AddCentralRoom().AddChambers().AddPaths().
+                AddWeapons().AddItems().AddEnemies().AddModifiedWeapons().AddPotions();
         }
     }
 }

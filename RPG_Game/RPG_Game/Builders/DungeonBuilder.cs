@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 using RPG_Game.Decorators;
@@ -24,7 +25,7 @@ namespace RPG_Game.Builders
             _room = new Room();
             _random = new Random();
         }
-        public void BuildEmptyDungeon()
+        public IBuilder BuildEmptyDungeon()
         {
             for (int i = 0; i < _room.Height; i++)
             {
@@ -33,8 +34,9 @@ namespace RPG_Game.Builders
                     _room.Grid[i, j].isWall = false;
                 }
             }
+            return this;
         }
-        public void BuildFilledDungeon()
+        public IBuilder BuildFilledDungeon()
         {
             for (int i = 0; i < _room.Height; i++)
             {
@@ -43,8 +45,9 @@ namespace RPG_Game.Builders
                     _room.Grid[i, j].isWall = true;
                 }
             }
+            return this;
         }
-        public void AddCentralRoom()
+        public IBuilder AddCentralRoom()
         {
             for (int i = _room.Height / 3; i <= _room.Height * 2 / 3; i++)
             {
@@ -53,8 +56,9 @@ namespace RPG_Game.Builders
                     _room.Grid[i, j].isWall = false;
                 }
             }
+            return this;
         }
-        public void AddEnemies()
+        public IBuilder AddEnemies()
         {
             for (int i = 0; i < _room.Height; i++)
             {
@@ -80,8 +84,9 @@ namespace RPG_Game.Builders
                     }
                 }
             }
+            return this;
         }
-        public void AddPotions()
+        public IBuilder AddPotions()
         {
             for (int i = 0; i < _room.Height; i++)
             {
@@ -106,8 +111,9 @@ namespace RPG_Game.Builders
                     }
                 }
             }
+            return this;
         }
-        public void AddWeapons()
+        public IBuilder AddWeapons()
         {
             for (int i = 0; i < _room.Height; i++)
             {
@@ -133,6 +139,7 @@ namespace RPG_Game.Builders
                     }
                 }
             }
+            return this;
         }
 
         private IWeapon ApplyRandomDecorators(IWeapon weapon)
@@ -156,7 +163,7 @@ namespace RPG_Game.Builders
 
             return weapon;
         }
-        public void AddModifiedWeapons()
+        public IBuilder AddModifiedWeapons()
         {
             for (int i = 0; i < _room.Height; i++)
             {
@@ -194,8 +201,9 @@ namespace RPG_Game.Builders
                     }
                 }
             }
+            return this;
         }
-        public void AddItems()
+        public IBuilder AddItems()
         {
             for (int i = 0; i < _room.Height; i++)
             {
@@ -239,8 +247,9 @@ namespace RPG_Game.Builders
                     }
                 }
             }
+            return this;
         }
-        public void AddPaths()
+        public IBuilder AddPaths()
         {
             // creating the first path
             int FPStartX = 0;
@@ -307,9 +316,9 @@ namespace RPG_Game.Builders
                 _room.Grid[currentX, currentY].isWall = false;
             }
 
-
+            return this;
         }
-        public void AddChambers()
+        public IBuilder AddChambers()
         {
             const int numberOfChambers = 5;
 
@@ -334,6 +343,7 @@ namespace RPG_Game.Builders
                     }
                 }
             }
+            return this;
         }
         public Room GetFinalResult() 
         {

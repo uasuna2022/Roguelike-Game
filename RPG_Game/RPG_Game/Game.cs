@@ -12,12 +12,11 @@ namespace RPG_Game
 {
     public class Game
     {
-
-        public Room room = new Room();
         public Player player;
+        public Room room = new Room();
+        private string _instructions;
         private bool _gameIsRunning;
         private readonly GameDisplayer _gameDisplayer = GameDisplayer.Instance;
-        private string _instructions;
         
         public Game(int version)
         {
@@ -28,27 +27,27 @@ namespace RPG_Game
         }
         public void CreateDungeon(int version)
         {
-            DungeonBuilder builder = new DungeonBuilder();
-            Director director = new Director(builder);
+            Director director = new Director();
+            CompositeBuilder compositeBuilder = new CompositeBuilder();
             
             switch (version)
             {
-                case 1:
-                    director.BuildBasicDungeonWithWalls();
-                    (room, _instructions) = director.GetFinalResult();
+                case 1:                  
+                    director.BuildBasicDungeonWithWalls(compositeBuilder);
                     break;
                 case 2:
-                    director.BuildFullDungeonWithWalls();
-                    (room, _instructions) = director.GetFinalResult();
+                    director.BuildFullDungeonWithWalls(compositeBuilder);
                     break;
                 case 3:
-                    director.BuildDungeonWithoutWalls();
-                    (room, _instructions) = director.GetFinalResult();
+                    director.BuildDungeonWithoutWalls(compositeBuilder);
                     break;
                 default:
                     Console.WriteLine("You have to enter 1, 2 or 3 to start a game!");
                     break;
             }
+
+            room = ((DungeonBuilder)(compositeBuilder._builders[0])).GetFinalResult();
+            _instructions = ((InstructionBuilder)(compositeBuilder._builders[1])).GetFinalResult();
         }
         public void StartGame()
         {
