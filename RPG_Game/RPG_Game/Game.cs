@@ -131,6 +131,11 @@ namespace RPG_Game
                         break;
                     }
                 case 'O':
+                    if (player.Inventory.Count == 0)
+                    {
+                        _gameDisplayer.AddNotification("Currently both of your hands are empty! Equip some weapon (I) to be able to unequip it later!");
+                        break;
+                    }
                     _gameDisplayer.AddNotification("Which hand would you like to unequip?");
                     char handChar = Console.ReadKey(true).KeyChar;
                     switch (char.ToUpper(handChar))

@@ -110,8 +110,12 @@ namespace RPG_Game
 
             else GameDisplayer.Instance.AddNotification("The cell is currently empty!");
         }
-        public void DropItem (IItem item, Room room)
+        public void DropItemFromHand (IItem item, Room room)
         {
+            Cell currentCell = room.GetCell(X, Y);
+            currentCell.AddItem(item);
+            GameDisplayer.Instance.AddNotification($"Dropped: {item.GetDisplayName()}");
+            /*
             if (!Inventory.Contains(item))
             {
                 GameDisplayer.Instance.AddNotification($"You don't have this item in your inventory!");
@@ -125,6 +129,7 @@ namespace RPG_Game
                 currentCell.AddItem(item);
                 GameDisplayer.Instance.AddNotification($"Dropped: {item.GetDisplayName()}");
             }
+            */
         }
 
         public void EquipWeapon(IWeapon weapon)
@@ -195,7 +200,7 @@ namespace RPG_Game
 
                 else
                 {
-                    DropItem(LeftHand, room);
+                    this.DropItemFromHand(LeftHand, room);
                     GameDisplayer.Instance.AddNotification($"Your inventory is full! The {LeftHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
                 }
                 
@@ -222,7 +227,7 @@ namespace RPG_Game
                     }
                     else
                     {
-                        DropItem(LeftHand, room);
+                        this.DropItemFromHand(LeftHand, room);
                         GameDisplayer.Instance.AddNotification($"Your inventory is full! The {LeftHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
                     }
                     LeftHand.UnequipPlayer(this);
@@ -249,7 +254,7 @@ namespace RPG_Game
                     }
                     else
                     {
-                        DropItem(RightHand, room);
+                        this.DropItemFromHand(RightHand, room);
                         GameDisplayer.Instance.AddNotification($"Your inventory is full! The {RightHand.GetDisplayName()} dropped on the cell ({this.X}, {this.Y})!");
                     }
                     RightHand.UnequipPlayer(this);
@@ -258,46 +263,5 @@ namespace RPG_Game
                 }
             }
         }       
-        public void PrintInventory()
-        {
-            GameDisplayer.Instance.AddNotification("Player's inventory:");
-
-            if (Inventory.Count == 0)
-            {
-                Console.Write(" empty!");
-                return;
-            }
-
-            int i = 1;
-            foreach (var item in Inventory)
-            {
-                GameDisplayer.Instance.AddNotification($"{i}) {item.GetDisplayName()}");
-                i++;
-            }
-            return;
-        }
-        public void PrintEquippedItems()
-        {
-            GameDisplayer.Instance.AddNotification("Equipped items:");
-            if (LeftHand == null)
-            {
-                Console.WriteLine("Left Hand: empty");
-            }
-            else
-            {
-                Console.WriteLine($"Left Hand: {LeftHand.GetDisplayName()}");
-            }
-
-            if (RightHand == null)
-            {
-                Console.WriteLine("Right Hand: empty");
-            }
-            else
-            {
-                Console.WriteLine($"Right Hand: {RightHand.GetDisplayName()}");
-            }
-
-            return;
-        }
     }
 }
