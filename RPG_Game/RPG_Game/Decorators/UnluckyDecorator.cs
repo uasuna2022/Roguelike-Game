@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPG_Game.Decorators
 {
-    public class UnluckyDecorator: WeaponDecoratorBaseClass, IWeapon
+    public class UnluckyDecorator: WeaponDecoratorBaseClass
     {
         public UnluckyDecorator(IWeapon weapon): base(weapon) { }
 

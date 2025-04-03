@@ -8,19 +8,23 @@ using System.Threading.Tasks;
 
 namespace RPG_Game.Decorators
 {
-    public abstract class WeaponDecoratorBaseClass: WeaponBaseClass, IWeapon // po samym IWeapon musi być dziedziczenie
+    public abstract class WeaponDecoratorBaseClass: IWeapon // po samym IWeapon musi być dziedziczenie
     {
         protected IWeapon wrappedWeapon;
-        protected WeaponDecoratorBaseClass(IWeapon weapon): base(weapon.Name, weapon.Symbol, weapon.Damage, weapon.IsTwoHanded)
+        protected WeaponDecoratorBaseClass(IWeapon weapon)
         {
             wrappedWeapon = weapon;
         }
-        public override string GetDisplayName() => wrappedWeapon.GetDisplayName();
-        public override void EquipPlayer(Player player) => wrappedWeapon.EquipPlayer(player);
-        public override void UnequipPlayer(Player player) => wrappedWeapon.UnequipPlayer(player);
-        public override int Damage => wrappedWeapon.Damage;
-
-        // + public override bool isTwoHanded
-
+        public virtual string Name => wrappedWeapon.Name;
+        public virtual char Symbol => wrappedWeapon.Symbol;
+        public virtual int Damage => wrappedWeapon.Damage;
+        public virtual bool IsTwoHanded => wrappedWeapon.IsTwoHanded;
+        public virtual string GetDisplayName() => wrappedWeapon.GetDisplayName();
+        public virtual void EquipPlayer(Player player) => wrappedWeapon.EquipPlayer(player);
+        public virtual void UnequipPlayer(Player player) => wrappedWeapon.UnequipPlayer(player);
+        public virtual void PickUp(Player player, Room room)
+        {
+            player.AddItemToInventory(wrappedWeapon, room);
+        }
     }
 }

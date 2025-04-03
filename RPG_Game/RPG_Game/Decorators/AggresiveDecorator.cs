@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPG_Game.Decorators
 {
-    public class AggresiveDecorator: WeaponDecoratorBaseClass, IWeapon
+    public class AggresiveDecorator: WeaponDecoratorBaseClass
     {
         public AggresiveDecorator(IWeapon weapon): base(weapon) { }
         public override string GetDisplayName()

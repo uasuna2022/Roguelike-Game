@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RPG_Game.Decorators
 {
-    public class PowerfulDecorator: WeaponDecoratorBaseClass, IWeapon
+    public class PowerfulDecorator: WeaponDecoratorBaseClass
     {
         public PowerfulDecorator(IWeapon weapon): base(weapon) { }
         public override string GetDisplayName()
