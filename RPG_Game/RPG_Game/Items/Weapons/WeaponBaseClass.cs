@@ -16,5 +16,6 @@ namespace RPG_Game.Items.Weapons
             Damage = damage;
             IsTwoHanded = isTwoHanded;
         }
+        // dodać PickUpWeapon() {}
     }
 }

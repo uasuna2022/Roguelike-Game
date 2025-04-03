@@ -12,7 +12,11 @@ namespace RPG_Game.Builders
         public List<IBuilder> _builders;
         public CompositeBuilder()
         {
-            _builders = new List<IBuilder>() { new DungeonBuilder(), new InstructionBuilder() };
+            _builders = new List<IBuilder>();
+        }
+        public void AddBuilderToList(IBuilder builder)
+        {
+            _builders.Add(builder);
         }
         public IBuilder BuildEmptyDungeon()
         {

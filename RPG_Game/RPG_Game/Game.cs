@@ -29,6 +29,10 @@ namespace RPG_Game
         {
             Director director = new Director();
             CompositeBuilder compositeBuilder = new CompositeBuilder();
+            DungeonBuilder dungeonBuilder = new DungeonBuilder();
+            InstructionBuilder instructionBuilder = new InstructionBuilder();
+            compositeBuilder.AddBuilderToList(dungeonBuilder);
+            compositeBuilder.AddBuilderToList(instructionBuilder);
             
             switch (version)
             {
@@ -46,8 +50,8 @@ namespace RPG_Game
                     break;
             }
 
-            room = ((DungeonBuilder)(compositeBuilder._builders[0])).GetFinalResult();
-            _instructions = ((InstructionBuilder)(compositeBuilder._builders[1])).GetFinalResult();
+            room = dungeonBuilder.GetFinalResult();
+            _instructions = instructionBuilder.GetFinalResult();
         }
         public void StartGame()
         {

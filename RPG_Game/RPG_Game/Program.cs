@@ -2,6 +2,8 @@
 using RPG_Game.Interfaces;
 using RPG_Game.Items.UnusableItems;
 using RPG_Game.Items.Weapons;
+using System;
+using System.Runtime.InteropServices;
 
 namespace RPG_Game
 {

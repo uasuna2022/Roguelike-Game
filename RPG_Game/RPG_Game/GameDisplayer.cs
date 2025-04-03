@@ -189,7 +189,7 @@ namespace RPG_Game
         {
             for (int i = 0; i < 7; i++)
             {   
-                Console.SetCursorPosition(_notificationsLeft, _notificationsTop + i);
+                Console.SetCursorPosition(_notificationsLeft, _notificationsTop + i); // sprawdzić metody automatycznego powiększania konsoli
                 Console.WriteLine("".PadRight(200));
             }
 

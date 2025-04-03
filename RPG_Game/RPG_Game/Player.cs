@@ -115,21 +115,6 @@ namespace RPG_Game
             Cell currentCell = room.GetCell(X, Y);
             currentCell.AddItem(item);
             GameDisplayer.Instance.AddNotification($"Dropped: {item.GetDisplayName()}");
-            /*
-            if (!Inventory.Contains(item))
-            {
-                GameDisplayer.Instance.AddNotification($"You don't have this item in your inventory!");
-                return;
-            }
-
-            else
-            {
-                Inventory.Remove(item);
-                Cell currentCell = room.GetCell(X, Y);
-                currentCell.AddItem(item);
-                GameDisplayer.Instance.AddNotification($"Dropped: {item.GetDisplayName()}");
-            }
-            */
         }
 
         public void EquipWeapon(IWeapon weapon)

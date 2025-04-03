@@ -37,9 +37,7 @@ namespace RPG_Game.Builders
         }
         public IBuilder AddModifiedWeapons()
         {
-            _instructions.Add("I + 1,2,...,0 - Equip concrete item from the inventory");
-            _instructions.Add("O + L,R - Unequip left or right hand");
-            return this;
+            return AddWeapons();
         }
         public IBuilder AddPotions() { return this; }
         public IBuilder AddCentralRoom() { return this; }

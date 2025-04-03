@@ -25,7 +25,7 @@ namespace RPG_Game.Decorators
         public virtual void UnequipPlayer(Player player) => wrappedWeapon.UnequipPlayer(player);
         public virtual void PickUp(Player player, Room room)
         {
-            player.AddItemToInventory(wrappedWeapon, room); // potentially 'this' except wrappedWeapon
+            player.AddItemToInventory(this, room);
         }
     }
 }
