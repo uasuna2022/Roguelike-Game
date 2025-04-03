@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RPG_Game.Decorators
 {
-    public abstract class WeaponDecoratorBaseClass: IWeapon // po samym IWeapon musi być dziedziczenie
+    public abstract class WeaponDecoratorBaseClass: IWeapon
     {
         protected IWeapon wrappedWeapon;
         protected WeaponDecoratorBaseClass(IWeapon weapon)
@@ -19,12 +19,13 @@ namespace RPG_Game.Decorators
         public virtual char Symbol => wrappedWeapon.Symbol;
         public virtual int Damage => wrappedWeapon.Damage;
         public virtual bool IsTwoHanded => wrappedWeapon.IsTwoHanded;
+        public virtual bool IsEquippable => wrappedWeapon.IsEquippable;
         public virtual string GetDisplayName() => wrappedWeapon.GetDisplayName();
         public virtual void EquipPlayer(Player player) => wrappedWeapon.EquipPlayer(player);
         public virtual void UnequipPlayer(Player player) => wrappedWeapon.UnequipPlayer(player);
         public virtual void PickUp(Player player, Room room)
         {
-            player.AddItemToInventory(wrappedWeapon, room);
+            player.AddItemToInventory(wrappedWeapon, room); // potentially 'this' except wrappedWeapon
         }
     }
 }

@@ -11,7 +11,7 @@ namespace RPG_Game.Items.Potions
     {
         public int Volume { get; private set; }
         public double HealingEffect { get; private set; }
-        public JuicePotion(int volume, double healingEffect): base("Juice Potion", 'J')
+        public JuicePotion(int volume, double healingEffect): base("Juice Potion", 'J', true)
         {
             Volume = volume;
             HealingEffect = healingEffect;

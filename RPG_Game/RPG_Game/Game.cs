@@ -85,16 +85,46 @@ namespace RPG_Game
                     Console.ReadKey();
                     break;
                 case 'I':
+                    bool containsEquipableItems = false;
+                    foreach (IItem item in player.Inventory)
+                    {
+                        if (item.IsEquippable)
+                        {
+                            containsEquipableItems = true;
+                            break;
+                        }
+                    }
                     if (player.Inventory.Count == 0)
                     {
                         _gameDisplayer.AddNotification($"Your inventory is empty & you can't equip any item!");
+                        break;
+                    }
+                    else if (!containsEquipableItems)
+                    {
+                        _gameDisplayer.AddNotification($"All the items in your inventory are unequippable!");
                         break;
                     }
                     else
                     {
                         _gameDisplayer.AddNotification($"Which item would you like to equip? Choose a number from 1 to 0 (10)");
                         int index = (char)Console.ReadKey(true).KeyChar - 48;
+                        if (index < 0 || index > 9)
+                        {
+                            _gameDisplayer.AddNotification($"Invalid number! Choose a digit (0-9), not a letter or any other character");
+                            break;
+                        }
                         if (index == 0) index += 10;
+                        if (index > player.Inventory.Count)
+                        {
+                            _gameDisplayer.AddNotification($"You don't have an item with this number in your inventory!");
+                            break;
+                        }
+                        if (!player.Inventory[index - 1].IsEquippable)
+                        {
+                            _gameDisplayer.AddNotification($"You can't equip {player.Inventory[index - 1].GetDisplayName()}! " +
+                                $"It's an unequippable item!");
+                            break;
+                        }
                         IWeapon chosenWeapon = (IWeapon)player.Inventory[index - 1];
                         player.EquipWeapon(chosenWeapon);
                         _gameDisplayer.DrawStats(player);

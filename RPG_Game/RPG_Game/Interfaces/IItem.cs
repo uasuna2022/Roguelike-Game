@@ -15,6 +15,7 @@ namespace RPG_Game.Interfaces
         void EquipPlayer (Player player);
         void UnequipPlayer (Player player);
         void PickUp (Player player, Room room);  
+        bool IsEquippable { get; }
         
     }
 }
