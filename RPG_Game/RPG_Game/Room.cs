@@ -28,9 +28,5 @@ namespace RPG_Game
                 }
             }
         }
-        public Cell GetCell(int x, int y)
-        {
-            return Grid[x, y];
-        }
     }
 }

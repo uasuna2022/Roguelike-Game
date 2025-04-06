@@ -11,6 +11,7 @@ namespace RPG_Game
     {
         static void Main(string[] args)
         {
+            Console.CursorVisible = false;
             int version = 0;
             bool validInput = false;
             while (!validInput)

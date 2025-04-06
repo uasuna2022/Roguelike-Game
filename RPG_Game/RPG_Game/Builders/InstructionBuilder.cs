@@ -37,7 +37,8 @@ namespace RPG_Game.Builders
         }
         public IBuilder AddModifiedWeapons()
         {
-            return AddWeapons();
+            //return AddWeapons();
+            return this;
         }
         public IBuilder AddPotions() { return this; }
         public IBuilder AddCentralRoom() { return this; }

@@ -4,13 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+// 46px * 156px
 namespace RPG_Game
 {
     public sealed class GameDisplayer
     {
-        private static GameDisplayer _instance;
-        public static GameDisplayer Instance => (_instance == null) ? (new GameDisplayer()) : _instance;
+        private static GameDisplayer? _instance;
+        public static GameDisplayer Instance => _instance ??= new GameDisplayer();
 
         private List<string> _notifications = new List<string>();
         private GameDisplayer() { }
@@ -18,19 +18,28 @@ namespace RPG_Game
         private const int _roomTop = 0;
         private const int _roomLeft = 0;
         private const int _playerStatsTop = 0;
-        private const int _playerStatsLeft = 59;
-        private const int _notificationsTop = 27;
+        private const int _playerStatsLeft = 99;
+        private const int _notificationsTop = 32;
         private const int _notificationsLeft = 0;
         private const int _instructionsTop = 21;
         private const int _instructionsLeft = 0;
+
+        public int stepCount;
+        private const int _gameStatsTop = 0;
+        private const int _gameStatsLeft = 45;
 
         public void Initialize(Room room, Player player, string instructions)
         {
             Console.Clear();
             DrawRoom(room, player);
-            DrawStats(player);
+            DrawPlayerStats(player);
             DrawInstructions(instructions);
-            DrawNotifications();
+            Console.SetCursorPosition(_notificationsLeft, _notificationsTop);
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("=== Notifications ===".PadRight(30));
+            Console.ResetColor();
+            stepCount = 0;
+            DrawGameStats(player);
         }
 
         public void DrawRoom(Room room, Player player)
@@ -114,30 +123,33 @@ namespace RPG_Game
                 else Console.Write(" ");
             }
         }
-        public void DrawStats(Player player)
+        public void DrawPlayerStats(Player player)
         {
+            Console.ForegroundColor = ConsoleColor.Yellow;
             int row = _playerStatsTop;
             Console.SetCursorPosition(_playerStatsLeft, row++);
             Console.WriteLine("=== Player Stats ===");
+            Console.ResetColor();
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Health: {player.Health} / {player.GetMaxHealth}".PadRight(30));
+            Console.WriteLine($"Health: {player.Health} / {player.GetMaxHealth}".PadRight(57));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Strength: {player.Strength}".PadRight(30));
+            Console.WriteLine($"Strength: {player.Strength}".PadRight(57));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Dexterity: {player.Dexterity}".PadRight(30));
+            Console.WriteLine($"Dexterity: {player.Dexterity}".PadRight(57));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Luck: {player.Luck}".PadRight(30));
+            Console.WriteLine($"Luck: {player.Luck}".PadRight(57));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Aggression: {player.Aggression}".PadRight(30));
+            Console.WriteLine($"Aggression: {player.Aggression}".PadRight(57));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Wisdom: {player.Wisdom}".PadRight(30));
+            Console.WriteLine($"Wisdom: {player.Wisdom}".PadRight(57));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Coins: {player.Coins}  Gold: {player.Gold}".PadRight(30));
+            Console.WriteLine($"Coins: {player.Coins}  Gold: {player.Gold}".PadRight(57));
             row++;
 
-
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine("=== Equipped Items ===".PadRight(30));
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("=== Equipped Items ===".PadRight(57));
+            Console.ResetColor();
 
             Console.SetCursorPosition(_playerStatsLeft, row++);
             string leftHandText = "empty";
@@ -145,7 +157,7 @@ namespace RPG_Game
             {
                 leftHandText = player.LeftHand.GetDisplayName();
             }
-            Console.WriteLine($"Left Hand: {leftHandText}".PadRight(100));
+            Console.WriteLine($"Left Hand: {leftHandText}".PadRight(57));
 
             Console.SetCursorPosition(_playerStatsLeft, row++);
             string rightHandText = "empty";
@@ -153,27 +165,32 @@ namespace RPG_Game
             {
                 rightHandText = player.RightHand.GetDisplayName();
             }
-            Console.WriteLine($"Right Hand: {rightHandText}".PadRight(100));
+            Console.WriteLine($"Right Hand: {rightHandText}".PadRight(57));
 
             int startRow = row;
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 13; i++)
             {
                 Console.SetCursorPosition(_playerStatsLeft, startRow + i);
-                Console.WriteLine("".PadRight(50));
+                Console.WriteLine("".PadRight(57));
             }
-            Console.SetCursorPosition(_playerStatsLeft, row++);
+            Console.SetCursorPosition(_playerStatsLeft, row += 2);
             if (player.Inventory.Count == 0)
             {
-                Console.WriteLine("Player's inventory: empty!".PadRight(30));
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("=== Player's inventory ===".PadRight(57));
+                Console.ResetColor();
             }
             else
             {
-                Console.WriteLine("Player's inventory:".PadRight(30));
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("=== Player's inventory ===".PadRight(57));
+                Console.ResetColor();
+                Console.SetCursorPosition(_playerStatsLeft, row++);
                 for (int i = 0; i < player.Inventory.Count; i++)
                 {
                     Console.SetCursorPosition(_playerStatsLeft, row++);
                     string displayName = player.Inventory[i].GetDisplayName();
-                    Console.WriteLine($"{i + 1}) {displayName}".PadRight(30));
+                    Console.WriteLine($"{i + 1}) {displayName}".PadRight(57));
                 }
             }
         }
@@ -185,21 +202,24 @@ namespace RPG_Game
             _notifications.Add(message);
             DrawNotifications();
         }
+        public void ClearNotifications()
+        {
+            _notifications.Clear();
+        }
         public void DrawNotifications()
         {
-            for (int i = 0; i < 7; i++)
+            for (int i = 1; i < 8; i++)
             {   
-                Console.SetCursorPosition(_notificationsLeft, _notificationsTop + i); // sprawdzić metody automatycznego powiększania konsoli
-                Console.WriteLine("".PadRight(200));
+                Console.SetCursorPosition(_notificationsLeft, _notificationsTop + i);
+                Console.WriteLine("".PadRight(100));
             }
 
             int row = _notificationsTop;
             Console.SetCursorPosition(_notificationsLeft, row++);
-            Console.WriteLine("=== Notifications ===".PadRight(30));
             foreach (string message in _notifications)
             {
                 Console.SetCursorPosition(_notificationsLeft, row++);
-                Console.WriteLine(message.PadRight(80));
+                Console.WriteLine(message.PadRight(100));
             }
         }
         public void DrawInstructions(string instructions)
@@ -208,7 +228,9 @@ namespace RPG_Game
             int col = _instructionsLeft;
 
             Console.SetCursorPosition(col, row++);
+            Console.ForegroundColor = ConsoleColor.Yellow;
             Console.WriteLine("=== Instructions ===");
+            Console.ResetColor();
 
             var lines = instructions.Split('\n');
             foreach (var line in lines)
@@ -219,6 +241,19 @@ namespace RPG_Game
                     Console.WriteLine(line.Trim());
                 }
             }
+        }
+        public void DrawGameStats(Player player)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            int row = _gameStatsTop;
+            Console.SetCursorPosition(_gameStatsLeft, row++);
+            Console.WriteLine("=== Game Stats ===".PadRight(30));
+            Console.ResetColor();
+            Console.SetCursorPosition(_gameStatsLeft, row++);
+            Console.WriteLine($"Current Tile: ({player.X}, {player.Y})".PadRight(30));
+            Console.SetCursorPosition(_gameStatsLeft, row++);
+            Console.WriteLine($"Step Counter: {stepCount}");
+            stepCount++;
         }
     }
 }

@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RPG_Game.Enemies;
+using RPG_Game.EnumClasses;
 using RPG_Game.Interfaces;
+using RPG_Game.Items.Currency;
 
 namespace RPG_Game
 {
@@ -45,44 +48,56 @@ namespace RPG_Game
         }
 
         public int GetMaxHealth => _maxHealth;
-
-        private bool isValidMove(int newX, int newY, Room room)
-        {
-            if (newX < 0 || newY < 0 || newX >= room.Height || newY >= room.Width) return false;
-            Cell possibleCell = room.GetCell(newX, newY);
-            if (possibleCell.isWall == true || possibleCell.Enemy != null) return false;
-            else return true;
-        }
-        public void Move (char direction, Room room)
+        public bool newIsValidMove(Direction? direction, Room room)
         {
             int newX = X;
             int newY = Y;
-            switch (char.ToUpper(direction))
+            switch (direction)
             {
-                case 'W':
+                case Direction.Up:
                     newX--;
                     break;
-                case 'A':
-                    newY--;
-                    break;
-                case 'S':
+                case Direction.Down:
                     newX++;
                     break;
-                case 'D':
+                case Direction.Left:
+                    newY--;
+                    break;
+                case Direction.Right:
                     newY++;
                     break;
                 default:
-                    return;
+                    break;
             }
-
-            if (isValidMove(newX, newY, room))
+            if (newX < 0 || newY < 0 || newX >= room.Height || newY >= room.Width) return false;
+            Cell possibleCell = room.Grid[newX, newY];
+            if (possibleCell.isWall == true || possibleCell.Enemy != null) return false;
+            else return true;
+        }
+        public void newMove(Direction? direction, Room room)
+        {
+            int newX = X;
+            int newY = Y;
+            switch (direction)
             {
-                
-                X = newX;
-                Y = newY;
+                case Direction.Up:
+                    newX--;
+                    break;
+                case Direction.Down:
+                    newX++;
+                    break;
+                case Direction.Left:
+                    newY--;
+                    break;
+                case Direction.Right:
+                    newY++;
+                    break;
+                default:
+                    break;
             }
 
-            return;
+            X = newX; 
+            Y = newY;
         }
         public void AddItemToInventory(IItem item, Room room)
         {
@@ -100,7 +115,7 @@ namespace RPG_Game
         }
         public void PickUpItem (Room room)
         {
-            Cell currentCell = room.GetCell(X, Y);
+            Cell currentCell = room.Grid[X, Y];
             IItem? pickedItem = currentCell.GetTopItem();
 
             if (pickedItem != null)
@@ -112,7 +127,7 @@ namespace RPG_Game
         }
         public void DropItemFromHand (IItem item, Room room)
         {
-            Cell currentCell = room.GetCell(X, Y);
+            Cell currentCell = room.Grid[X, Y];
             currentCell.AddItem(item);
             GameDisplayer.Instance.AddNotification($"Dropped: {item.GetDisplayName()}");
         }
@@ -207,7 +222,7 @@ namespace RPG_Game
                     if (Inventory.Count < _maxInventorySize)
                     {
                         Inventory.Add(LeftHand);
-                        GameDisplayer.Instance.AddNotification($"Left hand is uneqipped. {LeftHand.GetDisplayName()} moved back to inventory!");
+                        GameDisplayer.Instance.AddNotification($"Left hand is unequipped. {LeftHand.GetDisplayName()} moved back to inventory!");
 
                     }
                     else
@@ -234,8 +249,7 @@ namespace RPG_Game
                     if (Inventory.Count < _maxInventorySize)
                     {
                         Inventory.Add(RightHand);
-                        GameDisplayer.Instance.AddNotification($"Right hand is uneqipped. {RightHand} moved back to inventory!");
-
+                        GameDisplayer.Instance.AddNotification($"Right hand is unequipped. {RightHand.GetDisplayName()} moved back to inventory!");
                     }
                     else
                     {
@@ -247,6 +261,59 @@ namespace RPG_Game
                     return;
                 }
             }
-        }       
+        }
+        public void DropItemFromInventory(IItem item, Room room)
+        {
+            if (!Inventory.Contains(item))
+            {
+                GameDisplayer.Instance.AddNotification($"There is no {item.GetDisplayName()} in your inventory!");
+                return;
+            }
+            Inventory.Remove(item);
+            room.Grid[X, Y].AddItem(item);
+            GameDisplayer.Instance.AddNotification($"Item {item.GetDisplayName()} dropped on the tile ({X}, {Y})");
+        }
+        public void newDropItemFromHand(Hand hand, Room room)
+        {
+            if (hand == Hand.Left)
+            {
+                if (LeftHand == null)
+                {
+                    GameDisplayer.Instance.AddNotification("Left hand is empty! Equip it first to be able to unequip it!");
+                    return;
+                }
+                else if (RightHand != null && LeftHand.IsTwoHanded && RightHand.IsTwoHanded)
+                {
+                    GameDisplayer.Instance.AddNotification("Both of your hands are equipped with one two-handed weapon!");
+                    RightHand = null;
+
+                }
+
+                room.Grid[X, Y].AddItem(LeftHand);
+                LeftHand.UnequipPlayer(this);
+                GameDisplayer.Instance.AddNotification($"Item {LeftHand.GetDisplayName()} dropped on the tile ({X}, {Y})");
+                LeftHand = null;
+                return;
+            }
+            if (hand == Hand.Right)
+            {
+                if (RightHand == null)
+                {
+                    GameDisplayer.Instance.AddNotification("Right hand is empty! Equip it first to be able to unequip it!");
+                    return;
+                }
+                else if (LeftHand != null && LeftHand.IsTwoHanded && RightHand.IsTwoHanded)
+                {
+                    GameDisplayer.Instance.AddNotification("Both of your hands are equipped with one two-handed weapon!");
+                    LeftHand = null;
+                }
+
+                room.Grid[X, Y].AddItem(RightHand);
+                RightHand.UnequipPlayer(this);
+                GameDisplayer.Instance.AddNotification($"Item {RightHand.GetDisplayName()} dropped on the tile ({X}, {Y})");
+                RightHand = null;
+                return;
+            }
+        }
     }
 }

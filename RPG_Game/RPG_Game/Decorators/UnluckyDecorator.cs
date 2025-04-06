@@ -19,13 +19,11 @@ namespace RPG_Game.Decorators
         {
             base.UnequipPlayer(player);
             player.Luck += 5;
-            GameDisplayer.Instance.AddNotification($"Unequipped: {this.GetDisplayName()}");
         }
         public override void EquipPlayer(Player player)
         {
             base.EquipPlayer(player);
             player.Luck -= 5;
-            GameDisplayer.Instance.AddNotification($"Equipped with: {this.GetDisplayName()}");
         }
     }
 }

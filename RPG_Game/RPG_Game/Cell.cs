@@ -24,6 +24,7 @@ namespace RPG_Game
             isWall = false;
             _items = new Stack<IItem>();
             ContainsPlayer = false;
+            Enemy = null;
         }
         public void AddItem(IItem item)
         {
