@@ -1,4 +1,5 @@
 ﻿using RPG_Game.Interfaces;
+using RPG_Game.PotionEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,9 @@ namespace RPG_Game
         private const int _cellStatsTop = 4;
         private const int _cellStatsLeft = 43;
 
+        private const int _activePotionsLeft = 99;
+        private const int _activePotionsTop = 32;
+
         public void Initialize(Room room, Player player, string instructions)
         {
             Console.Clear();
@@ -44,6 +48,7 @@ namespace RPG_Game
             stepCount = 0;
             DrawGameStats(player);
             DrawCellStats(room.GetCell(player.X, player.Y));
+            DrawActivePotionEffects(player);
         }
 
         public void DrawRoom(Room room, Player player)
@@ -215,7 +220,7 @@ namespace RPG_Game
             for (int i = 1; i < 10; i++)
             {   
                 Console.SetCursorPosition(_notificationsLeft, _notificationsTop + i);
-                Console.WriteLine("".PadRight(100));
+                Console.WriteLine("".PadRight(99));
             }
 
             int row = _notificationsTop;
@@ -223,7 +228,7 @@ namespace RPG_Game
             foreach (string message in _notifications)
             {
                 Console.SetCursorPosition(_notificationsLeft, row++);
-                Console.WriteLine(message.PadRight(100));
+                Console.WriteLine(message.PadRight(99));
             }
         }
         public void DrawInstructions(string instructions)
@@ -282,5 +287,36 @@ namespace RPG_Game
                 }
             }
         }
+        public void DrawActivePotionEffects(Player player)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            int row = _activePotionsTop;
+            Console.SetCursorPosition(_activePotionsLeft, row++);
+            Console.WriteLine("=== Active Potion Effects ===".PadRight(56));
+            Console.ResetColor();
+
+            int startRow = row;
+            for (int i = 0; i < 10; i++)
+            {
+                Console.SetCursorPosition(_activePotionsLeft, startRow + i);
+                Console.WriteLine("".PadRight(56));
+            }
+
+            List<PotionEffectBaseClass> activeEffects = player.activeEffects;
+            if (activeEffects.Count > 0)
+            {
+                for (int i = 0; i < activeEffects.Count; i++)
+                {
+                    Console.SetCursorPosition(_activePotionsLeft, row++);
+                    Console.WriteLine($"{i + 1}) {activeEffects[i].ToString()}".PadRight(56));
+                }
+            }
+            else
+            {
+                Console.SetCursorPosition(_activePotionsLeft, row++);
+                Console.WriteLine("No active potion effects.".PadRight(56));
+            }
+        }
+
     }
 }

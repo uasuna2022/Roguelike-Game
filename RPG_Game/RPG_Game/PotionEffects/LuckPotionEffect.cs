@@ -32,10 +32,11 @@ namespace RPG_Game.PotionEffects
         {
             player.Luck = _originalLuck;
             GameDisplayer.Instance.AddNotification($"Luck Potion expired! Player's luck is {_originalLuck} again!");
+            player.activeEffects.Remove(this);
         }
         public override string ToString()
         {
-            return $"{this.GetType().ToString}: x{turnsRemaining} to player's luck, {turnsRemaining} turns left!";
+            return $"Luck Potion: x{turnsRemaining} to player's luck, {turnsRemaining} turns left!";
         }
     }
 }

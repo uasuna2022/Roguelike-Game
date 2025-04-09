@@ -23,6 +23,7 @@ namespace RPG_Game.InputHandlers
                 GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
                 GameDisplayer.Instance.UpdateMapCells(oldX, oldY, game.player.X, game.player.Y, game.room, game.player);
                 GameDisplayer.Instance.DrawGameStats(game.player);
+                GameDisplayer.Instance.DrawActivePotionEffects(game.player);
                 return true;
             }
 

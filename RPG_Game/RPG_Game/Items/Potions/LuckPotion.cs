@@ -23,6 +23,8 @@ namespace RPG_Game.Items.Potions
             PotionEffectBaseClass luckPotionEffect = CreatePotionEffect(player);
             player.Attach(luckPotionEffect);
             luckPotionEffect.AfterApply();
+            player.activeEffects.Add(luckPotionEffect);
+            GameDisplayer.Instance.DrawActivePotionEffects(player);
         }
     }
 }

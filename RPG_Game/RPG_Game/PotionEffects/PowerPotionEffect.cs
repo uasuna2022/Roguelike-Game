@@ -22,10 +22,11 @@ namespace RPG_Game.PotionEffects
         {
             player.Strength -= _strengthBoost;
             GameDisplayer.Instance.AddNotification($"Power Potion expired! Player's strength decreased by {_strengthBoost}!");
+            player.activeEffects.Remove(this);
         }
         public override string ToString()
         {
-            return $"{this.GetType().ToString}: +{_strengthBoost} to player's strength, {turnsRemaining} turns left!";
+            return $"Power Potion: +{_strengthBoost} to player's strength, {turnsRemaining} turns left!";
         }
     }
 }

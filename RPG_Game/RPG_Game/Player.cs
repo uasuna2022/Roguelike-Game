@@ -7,6 +7,7 @@ using RPG_Game.Enemies;
 using RPG_Game.EnumClasses;
 using RPG_Game.Interfaces;
 using RPG_Game.Items.Currency;
+using RPG_Game.PotionEffects;
 
 namespace RPG_Game
 {
@@ -48,6 +49,7 @@ namespace RPG_Game
         public int GetMaxHealth => _maxHealth;
 
         public List<IObserver> observers = new List<IObserver>();
+        public List<PotionEffectBaseClass> activeEffects = new List<PotionEffectBaseClass>();
         public void Attach(IObserver observer)
         {
             observers.Add(observer);

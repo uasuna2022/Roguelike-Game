@@ -21,6 +21,8 @@ namespace RPG_Game.Items.Potions
             PotionEffectBaseClass powerPotionEffect = CreatePotionEffect(player);
             player.Attach(powerPotionEffect);
             powerPotionEffect.AfterApply();
+            player.activeEffects.Add(powerPotionEffect);
+            GameDisplayer.Instance.DrawActivePotionEffects(player);
         }
         
     }
