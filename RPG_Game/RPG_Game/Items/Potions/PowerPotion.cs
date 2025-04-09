@@ -10,7 +10,7 @@ namespace RPG_Game.Items.Potions
 {
     public class PowerPotion: ItemBaseClass, IPotion
     {
-        public PowerPotion() : base("Power Potion", 'P', false, true) { }
+        public PowerPotion() : base("Power Potion", 'P', false, true, ConsoleColor.Magenta) { }
         public PotionEffectBaseClass CreatePotionEffect(Player player)
         {
             return new PowerPotionEffect(player, 5, 2);

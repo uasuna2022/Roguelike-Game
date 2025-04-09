@@ -11,7 +11,8 @@ namespace RPG_Game.Items.Weapons
     {
         public virtual int Damage { get; }
         public bool IsTwoHanded { get; }
-        protected WeaponBaseClass(string name, char symbol, int damage, bool isTwoHanded = false) : base(name, symbol, true, false)
+        protected WeaponBaseClass(string name, char symbol, int damage, bool isTwoHanded = false) : 
+            base(name, symbol, true, false, ConsoleColor.Cyan)
         {
             Damage = damage;
             IsTwoHanded = isTwoHanded;

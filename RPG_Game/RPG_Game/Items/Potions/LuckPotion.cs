@@ -10,7 +10,7 @@ namespace RPG_Game.Items.Potions
 {
     public class LuckPotion: ItemBaseClass, IPotion 
     {
-        public LuckPotion() : base("Luck Potion", 'L', false, true) { }
+        public LuckPotion() : base("Luck Potion", 'L', false, true, ConsoleColor.Magenta) { }
         public PotionEffectBaseClass CreatePotionEffect(Player player)
         {
             return new LuckPotionEffect(player, 4);

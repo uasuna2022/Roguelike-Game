@@ -19,9 +19,9 @@ namespace RPG_Game.InputHandlers
                 GameDisplayer.Instance.AddNotification("There is nothing to drop at the moment. Pick up some item to be able to equip or drop it!");
                 return true;
             }
-            GameDisplayer.Instance.AddNotification("Enter 'A' if you want to drop all the items you have;\n" +
-                "Enter 'L' to drop an item from your left hand, 'R' - from your right hand;\n" +
-                "Enter a digit (0-9) to drop the concrete item from the inventory");
+            GameDisplayer.Instance.AddNotification("Enter 'A' if you want to drop all the items you have;");
+            GameDisplayer.Instance.AddNotification("Enter 'L' to drop an item from your left hand, 'R' - from your right hand;");
+            GameDisplayer.Instance.AddNotification("Enter a digit (0-9) to drop the concrete item from the inventory");
             ConsoleKeyInfo additionalConsoleKey = Console.ReadKey(true);
             char additionalChar = char.ToUpper(additionalConsoleKey.KeyChar);
             int index = additionalChar - 48;
@@ -75,6 +75,9 @@ namespace RPG_Game.InputHandlers
                 case 'R':
                     game.player.newDropItemFromHand(Hand.Right, game.room);
                     GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
+                    break;
+                default:
+                    GameDisplayer.Instance.AddNotification("Invalid input. Enter 'X' to see again all the options!");
                     break;
             }
             return true;

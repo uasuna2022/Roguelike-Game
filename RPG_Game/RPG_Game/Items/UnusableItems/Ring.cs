@@ -8,7 +8,7 @@ namespace RPG_Game.Items.UnusableItems
 {
     public class Ring: ItemBaseClass
     {
-        public Ring(string description) : base("Ring", 'R', false, false) 
+        public Ring(string description) : base("Ring", 'R', false, false, ConsoleColor.DarkGreen) 
         {
             Description = description;
         }

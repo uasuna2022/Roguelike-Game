@@ -11,6 +11,7 @@ namespace RPG_Game.Interfaces
     {
         string Name { get; }
         char Symbol { get; }
+        ConsoleColor ConsoleColor { get; }
         string GetDisplayName();
         void EquipPlayer (Player player);
         void UnequipPlayer (Player player);

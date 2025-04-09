@@ -10,7 +10,7 @@ namespace RPG_Game.Items.Potions
 {
     public class InfJuicePotion: ItemBaseClass, IPotion
     {
-        public InfJuicePotion() : base("Juice", 'J', false, true) { }
+        public InfJuicePotion() : base("Juice", 'J', false, true, ConsoleColor.Magenta) { }
         public PotionEffectBaseClass CreatePotionEffect(Player player)
         {
             return new JuiceInfiniteEffect(player, -1, 50);

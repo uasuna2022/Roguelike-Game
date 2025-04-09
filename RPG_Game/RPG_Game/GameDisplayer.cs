@@ -84,7 +84,9 @@ namespace RPG_Game
                         IItem? topItem = room.Grid[i, j].GetTopItem();
                         if (topItem != null)
                         {
+                            Console.ForegroundColor = topItem.ConsoleColor;
                             Console.Write(topItem.Symbol);
+                            Console.ResetColor();
                         }
                         else Console.Write(" ");
                     }
@@ -127,7 +129,9 @@ namespace RPG_Game
                 IItem? topItem = room.Grid[row, col].GetTopItem();
                 if (topItem != null)
                 {
+                    Console.ForegroundColor = topItem.ConsoleColor;
                     Console.Write(topItem.Symbol);
+                    Console.ResetColor();
                 }
                 else Console.Write(" ");
             }
