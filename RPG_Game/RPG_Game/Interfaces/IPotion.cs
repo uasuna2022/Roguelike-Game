@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPG_Game.PotionEffects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,8 +9,7 @@ namespace RPG_Game.Interfaces
 {
     public interface IPotion: IItem
     {
-        int Volume { get; }
-        double HealingEffect { get; }
         void ConsumePotion(Player player);
+        PotionEffectBaseClass CreatePotionEffect(Player player);
     }
 }

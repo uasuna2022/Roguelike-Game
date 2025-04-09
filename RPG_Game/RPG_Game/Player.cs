@@ -35,7 +35,7 @@ namespace RPG_Game
             Dexterity = 20;
             Health = 30;
             _maxHealth = 100;
-            Luck = 0;
+            Luck = 5;
             Aggression = 0;
             Wisdom = 0;
             Inventory = new List<IItem>();

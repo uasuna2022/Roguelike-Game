@@ -100,10 +100,10 @@ namespace RPG_Game.Builders
                         switch (randomValue)
                         {
                             case 1:
-                                _room.Grid[i, j].AddItem(new ElixirPotion(volumeRandomValue, healingRandomValue));
+                                _room.Grid[i, j].AddItem(new PowerPotion());
                                 break;
                             case 2:
-                                _room.Grid[i, j].AddItem(new JuicePotion(volumeRandomValue, healingRandomValue));
+                                _room.Grid[i, j].AddItem(new LuckPotion());
                                 break;
                             default:
                                 continue;
