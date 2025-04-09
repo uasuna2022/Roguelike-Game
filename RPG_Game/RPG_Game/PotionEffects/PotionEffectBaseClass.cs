@@ -28,7 +28,7 @@ namespace RPG_Game.PotionEffects
             }
         }
         protected virtual void ApplyTurnEffect() { }
-        protected virtual void AfterExpire() { }
+        public virtual void AfterExpire() { }
         public override string ToString()
         {
             return $"{this.GetType().Name}: {turnsRemaining} turns left";

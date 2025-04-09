@@ -28,7 +28,7 @@ namespace RPG_Game.PotionEffects
                 GameDisplayer.Instance.AddNotification($"Luck multiplier is now {turnsRemaining}");
             }
         }
-        protected override void AfterExpire()
+        public override void AfterExpire()
         {
             player.Luck = _originalLuck;
             GameDisplayer.Instance.AddNotification($"Luck Potion expired! Player's luck is {_originalLuck} again!");

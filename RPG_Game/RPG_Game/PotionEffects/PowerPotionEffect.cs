@@ -18,7 +18,7 @@ namespace RPG_Game.PotionEffects
             player.Strength += _strengthBoost;
             GameDisplayer.Instance.AddNotification($"Player's strength increased by {_strengthBoost} for {turnsRemaining} steps!");
         }
-        protected override void AfterExpire()
+        public override void AfterExpire()
         {
             player.Strength -= _strengthBoost;
             GameDisplayer.Instance.AddNotification($"Power Potion expired! Player's strength decreased by {_strengthBoost}!");

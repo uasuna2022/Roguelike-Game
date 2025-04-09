@@ -56,11 +56,6 @@ namespace RPG_Game.InputHandlers
                 }
                 IPotion chosenPotion = (IPotion)game.player.Inventory[index - 1];
                 chosenPotion.ConsumePotion(game.player);
-                /*
-                IWeapon chosenWeapon = (IWeapon)game.player.Inventory[index - 1];
-                game.player.EquipWeapon(chosenWeapon);
-                GameDisplayer.Instance.DrawPlayerStats(game.player);
-                */
             }
             return true;
         }
