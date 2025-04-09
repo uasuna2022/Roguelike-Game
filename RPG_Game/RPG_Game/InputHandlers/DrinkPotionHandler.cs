@@ -10,7 +10,7 @@ namespace RPG_Game.InputHandlers
     {
         protected override bool Process(ConsoleKeyInfo consoleKey, Game game)
         {
-            if (char.ToUpper(consoleKey.KeyChar) != 'P')
+            if (consoleKey.Key != InputKeyConfiguration.DrinkPotion)
                 return false;
 
             GameDisplayer.Instance.AddNotification("tralalelo tralala");

@@ -11,7 +11,7 @@ namespace RPG_Game.InputHandlers
     {
         protected override bool Process(ConsoleKeyInfo consoleKey, Game game)
         {
-            if (char.ToUpper(consoleKey.KeyChar) != 'O')
+            if (consoleKey.Key != InputKeyConfiguration.Unequip)
                 return false;
 
             if (game.player.LeftHand == null && game.player.RightHand == null)

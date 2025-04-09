@@ -10,7 +10,7 @@ namespace RPG_Game.InputHandlers
     {
         protected override bool Process(ConsoleKeyInfo consoleKey, Game game)
         {
-            if (char.ToUpper(consoleKey.KeyChar) != 'Q')
+            if (consoleKey.Key != InputKeyConfiguration.Quit)
                 return false;
             game.gameIsRunning = false;
             GameDisplayer.Instance.AddNotification("Exiting game...");

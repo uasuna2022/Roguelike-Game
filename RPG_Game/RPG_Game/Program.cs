@@ -30,7 +30,7 @@ namespace RPG_Game
             }
 
             Game game = new Game(version);
-            game.CreateDungeon(version);
+            game.BuildGame(version);
             game.StartGame();
         }
     }

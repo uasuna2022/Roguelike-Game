@@ -34,14 +34,15 @@ namespace RPG_Game.InputHandlers
         }
         private Direction? DirectionFromKey(ConsoleKeyInfo consoleKey)
         {
-            switch (char.ToUpper(consoleKey.KeyChar))
-            {
-                case 'W': return Direction.Up;
-                case 'S': return Direction.Down;
-                case 'A': return Direction.Left;
-                case 'D': return Direction.Right;
-                default: return null;
-            }
+            if (consoleKey.Key == InputKeyConfiguration.MoveUp)
+                return Direction.Up;
+            if (consoleKey.Key == InputKeyConfiguration.MoveDown)
+                return Direction.Down;
+            if (consoleKey.Key == InputKeyConfiguration.MoveLeft)
+                return Direction.Left;
+            if (consoleKey.Key == InputKeyConfiguration.MoveRight)
+                return Direction.Right;
+            return null;
         }
     }
 }

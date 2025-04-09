@@ -12,7 +12,7 @@ namespace RPG_Game.InputHandlers
     {
         protected override bool Process(ConsoleKeyInfo consoleKey, Game game)
         {
-            if (char.ToUpper(consoleKey.KeyChar) != 'I')
+            if (consoleKey.Key != InputKeyConfiguration.Equip)
                 return false;
 
             bool containsEquippableItems = false;

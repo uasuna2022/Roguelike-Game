@@ -25,10 +25,10 @@ namespace RPG_Game
         {
             player = new Player();
             gameIsRunning = true;
-            CreateDungeon(version);
+            BuildGame(version);
             _instructions = "";
         }
-        public void CreateDungeon(int version)
+        public void BuildGame(int version)
         {
             Director director = new Director();
             CompositeBuilder compositeBuilder = new CompositeBuilder();

@@ -12,7 +12,7 @@ namespace RPG_Game.InputHandlers
     {
         protected override bool Process(ConsoleKeyInfo consoleKey, Game game)
         {
-            if (char.ToUpper(consoleKey.KeyChar) != 'X')
+            if (consoleKey.Key != InputKeyConfiguration.DropItem)
                 return false;
             if (game.player.Inventory.Count == 0 && game.player.LeftHand == null && game.player.RightHand == null)
             {

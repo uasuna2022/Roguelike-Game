@@ -10,7 +10,7 @@ namespace RPG_Game.InputHandlers
     {
         protected override bool Process (ConsoleKeyInfo consoleKey, Game game)
         {
-            if (char.ToUpper(consoleKey.KeyChar) != 'E')
+            if (consoleKey.Key != InputKeyConfiguration.PickItem)
                 return false;
             game.player.PickUpItem(game.room);
             GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
