@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 // 46px * 156px
@@ -26,7 +27,9 @@ namespace RPG_Game
 
         public int stepCount;
         private const int _gameStatsTop = 0;
-        private const int _gameStatsLeft = 45;
+        private const int _gameStatsLeft = 43;
+        private const int _cellStatsTop = 4;
+        private const int _cellStatsLeft = 43;
 
         public void Initialize(Room room, Player player, string instructions)
         {
@@ -40,6 +43,7 @@ namespace RPG_Game
             Console.ResetColor();
             stepCount = 0;
             DrawGameStats(player);
+            DrawCellStats(room.GetCell(player.X, player.Y));
         }
 
         public void DrawRoom(Room room, Player player)
@@ -208,7 +212,7 @@ namespace RPG_Game
         }
         public void DrawNotifications()
         {
-            for (int i = 1; i < 8; i++)
+            for (int i = 1; i < 10; i++)
             {   
                 Console.SetCursorPosition(_notificationsLeft, _notificationsTop + i);
                 Console.WriteLine("".PadRight(100));
@@ -254,6 +258,29 @@ namespace RPG_Game
             Console.SetCursorPosition(_gameStatsLeft, row++);
             Console.WriteLine($"Step Counter: {stepCount}");
             stepCount++;
+        }
+        public void DrawCellStats(Cell cell)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            int row = _cellStatsTop;
+            Console.SetCursorPosition(_cellStatsLeft, row++);
+            Console.WriteLine("=== Current Cell Stats ===".PadRight(56));
+            Console.ResetColor();
+            int startRow = row;
+            for (int i = 0; i < 15; i++)
+            {
+                Console.SetCursorPosition(_cellStatsLeft, startRow + i);
+                Console.WriteLine("".PadRight(56));
+            }
+            if (cell.Items.Count > 0)
+            {
+                for (int i = 0; i < cell.Items.Count; i++)
+                {
+                    Console.SetCursorPosition(_cellStatsLeft, row++);
+                    string displayName = cell.Items[i].GetDisplayName();
+                    Console.WriteLine($"{i + 1}) {displayName}".PadRight(56));
+                }
+            }
         }
     }
 }

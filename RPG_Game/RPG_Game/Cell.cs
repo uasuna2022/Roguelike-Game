@@ -14,7 +14,8 @@ namespace RPG_Game
         public int Y { get; set; }
         public bool isWall {  get; set; }
 
-        private Stack<IItem> _items;
+        public List<IItem> Items;
+        public int maxListSize { get; }
         public IEnemy? Enemy { get; set; }
         public bool ContainsPlayer {  get; set; }
         public Cell (int x, int y)
@@ -22,13 +23,18 @@ namespace RPG_Game
             X = x;
             Y = y;
             isWall = false;
-            _items = new Stack<IItem>();
+            Items = new List<IItem>();
+            maxListSize = 15;
             ContainsPlayer = false;
             Enemy = null;
         }
         public void AddItem(IItem item)
         {
-            _items.Push(item);
+            if (Items.Count < maxListSize)
+            {
+                Items.Add(item);
+                return;
+            }
         }
         public void AddEnemy(IEnemy enemy)
         {
@@ -36,14 +42,26 @@ namespace RPG_Game
         }
         public void RemoveTopItem()
         {
-            if (_items.Count == 0) return;
-            _items.Pop();
+            if (Items.Count == 0) return;
+            //_items.Pop();
+            Items.RemoveAt(0);
         }
 
         public IItem? GetTopItem()
         {
-            if (_items.Count == 0) return null;
-            return _items.Peek();
+            if (Items.Count == 0) return null;
+            //return _items.Peek();
+            return Items[0];
+        }
+
+        public void RemoveItemFromCell(IItem item)
+        {
+            if (!Items.Contains(item))
+            {
+                GameDisplayer.Instance.AddNotification($"There is no {item.GetDisplayName()} on ({X}, {Y}) cell");
+                return;
+            }
+            Items.Remove(item);
         }
 
     }

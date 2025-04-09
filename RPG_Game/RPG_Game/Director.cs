@@ -18,8 +18,8 @@ namespace RPG_Game
         }
         public void BuildBasicDungeonWithWalls(IBuilder compositeBuilder) // 'basic' means without modified weapons, potions and enemies
         {
-            compositeBuilder.BuildFilledDungeon().AddItems().AddWeapons().AddPaths().
-                AddChambers().AddCentralRoom();
+            compositeBuilder.BuildFilledDungeon().AddPaths().AddChambers().
+                AddCentralRoom().AddItems().AddWeapons();
         }
         public void BuildFullDungeonWithWalls(IBuilder compositeBuilder) // 'full' means with all the possible items/enemies/etc.
         {

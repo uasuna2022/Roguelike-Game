@@ -35,6 +35,7 @@ namespace RPG_Game.InputHandlers
                 }
                 IItem chosenItem = game.player.Inventory[index - 1];
                 game.player.DropItemFromInventory(chosenItem, game.room);
+                GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
                 return true;
             }
 
@@ -59,6 +60,7 @@ namespace RPG_Game.InputHandlers
                         }
                         GameDisplayer.Instance.ClearNotifications();
                         GameDisplayer.Instance.AddNotification($"Everything dropped on the tile ({game.player.X}, {game.player.Y})");
+                        GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
                         return true;
                     }
                     else
@@ -68,9 +70,11 @@ namespace RPG_Game.InputHandlers
                     }
                 case 'L':
                     game.player.newDropItemFromHand(Hand.Left, game.room);
+                    GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
                     break;
                 case 'R':
                     game.player.newDropItemFromHand(Hand.Right, game.room);
+                    GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
                     break;
             }
             return true;

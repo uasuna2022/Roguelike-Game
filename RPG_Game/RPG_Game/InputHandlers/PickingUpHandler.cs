@@ -13,6 +13,7 @@ namespace RPG_Game.InputHandlers
             if (char.ToUpper(consoleKey.KeyChar) != 'E')
                 return false;
             game.player.PickUpItem(game.room);
+            GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
             return true;
         }
     }

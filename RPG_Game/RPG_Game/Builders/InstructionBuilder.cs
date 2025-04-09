@@ -27,10 +27,13 @@ namespace RPG_Game.Builders
         public IBuilder AddItems() // Potentially can add 'if' to check if there are items on the ground
         {
             _instructions.Add("E - Pick up item");
+            _instructions.Add("X + 1,2,...,0 - Drop item from inventory");
+            _instructions.Add("X + A - Drop all items from both hands and inventory");
             return this;
         }
         public IBuilder AddWeapons() // Potentially can add 'if' to check is the player's inventory empty 
         {
+            _instructions.Add("X + L,R - Drop weapon from left or right hand");
             _instructions.Add("I + 1,2,...,0 - Equip concrete item from the inventory");
             _instructions.Add("O + L,R - Unequip left or right hand");
             return this;
@@ -40,7 +43,11 @@ namespace RPG_Game.Builders
             //return AddWeapons();
             return this;
         }
-        public IBuilder AddPotions() { return this; }
+        public IBuilder AddPotions()
+        {
+            _instructions.Add("P - Drink Potion");
+            return this;
+        }
         public IBuilder AddCentralRoom() { return this; }
         public IBuilder AddChambers() { return this; }
         public IBuilder AddPaths() { return this; }

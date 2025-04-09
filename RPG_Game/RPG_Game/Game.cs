@@ -19,7 +19,7 @@ namespace RPG_Game
         public bool gameIsRunning;
         private readonly GameDisplayer _gameDisplayer = GameDisplayer.Instance;
 
-        private IInputHandler _inputHandler;
+        private IInputHandler? _inputHandler;
         
         public Game(int version)
         {
@@ -27,17 +27,6 @@ namespace RPG_Game
             gameIsRunning = true;
             CreateDungeon(version);
             _instructions = "";
-            IInputHandler moveHandler = new MoveHandler();
-            IInputHandler pickingUpHandler = new PickingUpHandler();
-            IInputHandler dropHandler = new DropHandler();
-            IInputHandler drinkPotionHandler = new DrinkPotionHandler();
-            IInputHandler equipHandler = new EquipHandler();
-            IInputHandler unequipHandler = new UnequipHandler();
-            IInputHandler quitHandler = new QuitHandler();
-            IInputHandler defaultHandler = new DefaultHandler();
-            moveHandler.SetNext(pickingUpHandler).SetNext(dropHandler).SetNext(drinkPotionHandler).
-                SetNext(equipHandler).SetNext(unequipHandler).SetNext(quitHandler).SetNext(defaultHandler);
-            _inputHandler = moveHandler;
         }
         public void CreateDungeon(int version)
         {
@@ -45,8 +34,11 @@ namespace RPG_Game
             CompositeBuilder compositeBuilder = new CompositeBuilder();
             DungeonBuilder dungeonBuilder = new DungeonBuilder();
             InstructionBuilder instructionBuilder = new InstructionBuilder();
+            // changes
+            InputHandlerChainBuilder inputHandlerChainBuilder = new InputHandlerChainBuilder();
             compositeBuilder.AddBuilderToList(dungeonBuilder);
             compositeBuilder.AddBuilderToList(instructionBuilder);
+            compositeBuilder.AddBuilderToList(inputHandlerChainBuilder);
             
             switch (version)
             {
@@ -64,8 +56,11 @@ namespace RPG_Game
                     break;
             }
 
+            // changes
+            inputHandlerChainBuilder.AddQuitAndDefaultHandlers();
             room = dungeonBuilder.GetFinalResult();
             _instructions = instructionBuilder.GetFinalResult();
+            _inputHandler = inputHandlerChainBuilder.CreateChainFromList();
         }
         public void StartGame()
         {
@@ -75,7 +70,7 @@ namespace RPG_Game
             while (gameIsRunning)
             {
                 ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
-                _inputHandler.HandleInput(consoleKeyInfo, this);
+                _inputHandler?.HandleInput(consoleKeyInfo, this);
                 _gameDisplayer.DrawPlayerStats(player);   
             }
         }

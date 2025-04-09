@@ -107,7 +107,6 @@ namespace RPG_Game
                 room.Grid[X, Y].RemoveTopItem();
                 GameDisplayer.Instance.AddNotification($"Picked up an item: {item.GetDisplayName()}");
             }
-
             else
             {
                 GameDisplayer.Instance.AddNotification($"The inventory is full! ({_maxInventorySize} out of {_maxInventorySize})");
@@ -130,6 +129,7 @@ namespace RPG_Game
             Cell currentCell = room.Grid[X, Y];
             currentCell.AddItem(item);
             GameDisplayer.Instance.AddNotification($"Dropped: {item.GetDisplayName()}");
+            GameDisplayer.Instance.DrawCellStats(room.GetCell(X, Y));
         }
 
         public void EquipWeapon(IWeapon weapon)
