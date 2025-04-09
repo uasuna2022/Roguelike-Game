@@ -11,8 +11,6 @@ namespace RPG_Game.Items.Potions
     public class LuckPotion: ItemBaseClass, IPotion 
     {
         public LuckPotion() : base("Luck Potion", 'L', false, true) { }
-        public override string GetDisplayName() => 
-            $"Luck Potion";
         public PotionEffectBaseClass CreatePotionEffect(Player player)
         {
             return new LuckPotionEffect(player, 4);

@@ -105,6 +105,9 @@ namespace RPG_Game.Builders
                             case 2:
                                 _room.Grid[i, j].AddItem(new LuckPotion());
                                 break;
+                            case 3:
+                                _room.Grid[i, j].AddItem(new InfJuicePotion());
+                                break;
                             default:
                                 continue;
                         }

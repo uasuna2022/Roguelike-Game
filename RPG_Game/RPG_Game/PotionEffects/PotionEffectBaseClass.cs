@@ -17,7 +17,7 @@ namespace RPG_Game.PotionEffects
             this.turnsRemaining = duration;
         }
         public virtual void AfterApply() { }
-        public void Update()
+        public virtual void Update()
         {
             turnsRemaining--;
             ApplyTurnEffect();

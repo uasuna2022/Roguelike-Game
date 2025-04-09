@@ -33,7 +33,7 @@ namespace RPG_Game
         private const int _cellStatsLeft = 43;
 
         private const int _activePotionsLeft = 99;
-        private const int _activePotionsTop = 32;
+        private const int _activePotionsTop = 26;
 
         public void Initialize(Room room, Player player, string instructions)
         {
@@ -311,12 +311,6 @@ namespace RPG_Game
                     Console.WriteLine($"{i + 1}) {activeEffects[i].ToString()}".PadRight(56));
                 }
             }
-            else
-            {
-                Console.SetCursorPosition(_activePotionsLeft, row++);
-                Console.WriteLine("No active potion effects.".PadRight(56));
-            }
         }
-
     }
 }
