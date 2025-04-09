@@ -9,7 +9,7 @@ namespace RPG_Game.Items.UnusableItems
     public class Book: ItemBaseClass
     {
         public string Description;
-        public Book(string description, string title): base(title, 'B', false)
+        public Book(string description, string title): base(title, 'B', false, false)
         {
             Description = description;
         }

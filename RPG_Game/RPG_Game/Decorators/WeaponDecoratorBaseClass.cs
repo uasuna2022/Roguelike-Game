@@ -20,6 +20,7 @@ namespace RPG_Game.Decorators
         public virtual int Damage => wrappedWeapon.Damage;
         public virtual bool IsTwoHanded => wrappedWeapon.IsTwoHanded;
         public virtual bool IsEquippable => wrappedWeapon.IsEquippable;
+        public virtual bool IsDrinkable => wrappedWeapon.IsDrinkable;
         public virtual string GetDisplayName() => wrappedWeapon.GetDisplayName();
         public virtual void EquipPlayer(Player player) => wrappedWeapon.EquipPlayer(player);
         public virtual void UnequipPlayer(Player player) => wrappedWeapon.UnequipPlayer(player);

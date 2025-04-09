@@ -10,7 +10,7 @@ namespace RPG_Game.Items.Potions
 {
     public class LuckPotion: ItemBaseClass, IPotion 
     {
-        public LuckPotion() : base("Luck Potion", 'L', false) { }
+        public LuckPotion() : base("Luck Potion", 'L', false, true) { }
         public override string GetDisplayName() => 
             $"Luck Potion";
         public PotionEffectBaseClass CreatePotionEffect(Player player)
@@ -19,7 +19,10 @@ namespace RPG_Game.Items.Potions
         }
         public void ConsumePotion(Player player)
         {
-
+            player.Inventory.Remove(this);
+            PotionEffectBaseClass luckPotionEffect = CreatePotionEffect(player);
+            player.Attach(luckPotionEffect);
+            luckPotionEffect.AfterApply();
         }
     }
 }

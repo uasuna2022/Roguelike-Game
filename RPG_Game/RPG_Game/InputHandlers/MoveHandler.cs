@@ -19,8 +19,8 @@ namespace RPG_Game.InputHandlers
                 int oldX = game.player.X;
                 int oldY = game.player.Y;
                 game.player.newMove(direction, game.room);
+                game.player.NotifyObservers();
                 GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
-                GameDisplayer.Instance.AddNotification($"Player moved to ({game.player.X}, {game.player.Y})");
                 GameDisplayer.Instance.UpdateMapCells(oldX, oldY, game.player.X, game.player.Y, game.room, game.player);
                 GameDisplayer.Instance.DrawGameStats(game.player);
                 return true;

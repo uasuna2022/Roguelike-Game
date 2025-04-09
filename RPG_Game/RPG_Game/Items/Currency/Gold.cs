@@ -9,7 +9,7 @@ namespace RPG_Game.Items.Currency
     public class Gold: ItemBaseClass
     {
         public int Amount { get; private set; }
-        public Gold(int amount) : base("Gold", '0', false)
+        public Gold(int amount) : base("Gold", '0', false, false)
         {
             Amount = amount;
         }

@@ -12,12 +12,14 @@ namespace RPG_Game.Items
         public string Name { get; }
         public char Symbol { get; }
         public bool IsEquippable { get; }
+        public bool IsDrinkable { get; }
         public virtual string GetDisplayName() => Name;
-        protected ItemBaseClass(string name, char symbol, bool isEquippable) 
+        protected ItemBaseClass(string name, char symbol, bool isEquippable, bool isDrinkable) 
         {
             Name = name;
             Symbol = symbol;
             IsEquippable = isEquippable;
+            IsDrinkable = isDrinkable;
         }
         public virtual void EquipPlayer(Player player) { } // do nothing 
         public virtual void UnequipPlayer(Player player) { } // do nothing

@@ -31,7 +31,7 @@ namespace RPG_Game.PotionEffects
         protected override void AfterExpire()
         {
             player.Luck = _originalLuck;
-            GameDisplayer.Instance.AddNotification($"{this.GetType().ToString} expired! Player's luck is {_originalLuck} again!");
+            GameDisplayer.Instance.AddNotification($"Luck Potion expired! Player's luck is {_originalLuck} again!");
         }
         public override string ToString()
         {
