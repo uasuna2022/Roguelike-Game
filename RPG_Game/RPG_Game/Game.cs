@@ -34,7 +34,6 @@ namespace RPG_Game
             CompositeBuilder compositeBuilder = new CompositeBuilder();
             DungeonBuilder dungeonBuilder = new DungeonBuilder();
             InstructionBuilder instructionBuilder = new InstructionBuilder();
-            // changes
             InputHandlerChainBuilder inputHandlerChainBuilder = new InputHandlerChainBuilder();
             compositeBuilder.AddBuilderToList(dungeonBuilder);
             compositeBuilder.AddBuilderToList(instructionBuilder);
@@ -56,7 +55,6 @@ namespace RPG_Game
                     break;
             }
 
-            // changes
             inputHandlerChainBuilder.AddQuitAndDefaultHandlers();
             room = dungeonBuilder.GetFinalResult();
             _instructions = instructionBuilder.GetFinalResult();

@@ -10,7 +10,7 @@ using RPG_Game.Items.Currency;
 
 namespace RPG_Game
 {
-    public class Player
+    public class Player: ISubject
     {
         public int X {  get; set; }
         public int Y { get; set; }
@@ -27,7 +27,6 @@ namespace RPG_Game
         public IWeapon? RightHand { get; private set; }
         public int Coins { get; set; }
         public int Gold { get; set; }
-
         public Player()
         {
             X = 0;
@@ -46,8 +45,25 @@ namespace RPG_Game
             Coins = 0;
             Gold = 0;
         }
-
         public int GetMaxHealth => _maxHealth;
+
+        public List<IObserver> observers = new List<IObserver>();
+        public void Attach(IObserver observer)
+        {
+            observers.Add(observer);
+        }
+        public void Detach(IObserver observer)
+        {
+            observers.Remove(observer);
+        }
+        public void NotifyObservers()
+        {
+            // iterating over the copy of list to avoid errors, when some observer deletes itself
+            foreach (IObserver observer in observers.ToList())  
+            {
+                observer.Update();
+            }
+        }
         public bool newIsValidMove(Direction? direction, Room room)
         {
             int newX = X;
