@@ -48,7 +48,11 @@ namespace RPG_Game.Builders
             _inputHandlers.Add(new DrinkPotionHandler());
             return this;
         }
-        public IBuilder AddEnemies() { return this; } // in the future new handler to attack will be added
+        public IBuilder AddEnemies()
+        {
+            _inputHandlers.Add(new FightHandler());
+            return this;
+        }
         public InputHandlerChainBuilder AddQuitAndDefaultHandlers()
         {
             _inputHandlers.Add(new QuitHandler());

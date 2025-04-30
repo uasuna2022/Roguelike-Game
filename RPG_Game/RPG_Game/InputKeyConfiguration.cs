@@ -19,5 +19,6 @@ namespace RPG_Game
         public static ConsoleKey Equip { get; set; } = ConsoleKey.I;
         public static ConsoleKey Unequip { get; set; } = ConsoleKey.O;
         public static ConsoleKey Quit { get; set; } = ConsoleKey.Q;
+        public static ConsoleKey Fight { get; set; } = ConsoleKey.F;
     }
 }

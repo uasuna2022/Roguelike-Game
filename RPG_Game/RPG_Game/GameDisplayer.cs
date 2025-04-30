@@ -35,6 +35,9 @@ namespace RPG_Game
         private const int _activePotionsLeft = 99;
         private const int _activePotionsTop = 26;
 
+        private const int _enemyInfoTop = 0;
+        private const int _enemyInfoLeft = 130;
+
         public void Initialize(Room room, Player player, string instructions)
         {
             Console.Clear();
@@ -49,6 +52,7 @@ namespace RPG_Game
             DrawGameStats(player);
             DrawCellStats(room.GetCell(player.X, player.Y));
             DrawActivePotionEffects(player);
+            DrawNearbyEnemies(player);
         }
 
         public void DrawRoom(Room room, Player player)
@@ -144,19 +148,19 @@ namespace RPG_Game
             Console.WriteLine("=== Player Stats ===");
             Console.ResetColor();
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Health: {player.Health} / {player.GetMaxHealth}".PadRight(57));
+            Console.WriteLine($"Health: {player.Health} / {player.GetMaxHealth}".PadRight(25));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Strength: {player.Strength}".PadRight(57));
+            Console.WriteLine($"Strength: {player.Strength}".PadRight(25));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Dexterity: {player.Dexterity}".PadRight(57));
+            Console.WriteLine($"Dexterity: {player.Dexterity}".PadRight(25));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Luck: {player.Luck}".PadRight(57));
+            Console.WriteLine($"Luck: {player.Luck}".PadRight(25));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Aggression: {player.Aggression}".PadRight(57));
+            Console.WriteLine($"Aggression: {player.Aggression}".PadRight(25));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Wisdom: {player.Wisdom}".PadRight(57));
+            Console.WriteLine($"Wisdom: {player.Wisdom}".PadRight(25));
             Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Coins: {player.Coins}  Gold: {player.Gold}".PadRight(57));
+            Console.WriteLine($"Coins: {player.Coins}  Gold: {player.Gold}".PadRight(25));
             row++;
 
             Console.SetCursorPosition(_playerStatsLeft, row++);
@@ -315,6 +319,42 @@ namespace RPG_Game
                     Console.WriteLine($"{i + 1}) {activeEffects[i].ToString()}".PadRight(56));
                 }
             }
+        }
+        public void DrawNearbyEnemies(Player player)
+        {
+            IEnemy? up = player.nearbyEnemies[EnumClasses.Direction.Up];
+            IEnemy? down = player.nearbyEnemies[EnumClasses.Direction.Down];
+            IEnemy? left = player.nearbyEnemies[EnumClasses.Direction.Left];
+            IEnemy? right = player.nearbyEnemies[EnumClasses.Direction.Right];
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            int row = _enemyInfoTop;
+            Console.SetCursorPosition(_enemyInfoLeft, row++);
+            Console.WriteLine("=== Nearby enemies ===");
+            Console.ResetColor();
+            Console.SetCursorPosition(_enemyInfoLeft, row++);
+            if (up != null)
+            {
+                Console.WriteLine($"Up: {up.Name}".PadRight(26));
+            }
+            else Console.WriteLine($"Up: nobody".PadRight(26));
+            Console.SetCursorPosition(_enemyInfoLeft, row++);
+            if (down != null)
+            {
+                Console.WriteLine($"Down: {down.Name}".PadRight(26));
+            }
+            else Console.WriteLine($"Down: nobody".PadRight(26));
+            Console.SetCursorPosition(_enemyInfoLeft, row++);
+            if (left != null)
+            {
+                Console.WriteLine($"Left: {left.Name}".PadRight(26));
+            }
+            else Console.WriteLine("Left: nobody".PadRight(26));
+            Console.SetCursorPosition(_enemyInfoLeft, row++);
+            if (right != null)
+            {
+                Console.WriteLine($"Right: {right.Name}".PadRight(26));
+            }
+            else Console.WriteLine("Right: nobody".PadRight(26));
         }
     }
 }

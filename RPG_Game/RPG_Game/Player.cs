@@ -28,6 +28,7 @@ namespace RPG_Game
         public IWeapon? RightHand { get; private set; }
         public int Coins { get; set; }
         public int Gold { get; set; }
+        public Dictionary<Direction, IEnemy?> nearbyEnemies { get; set; }
         public Player()
         {
             X = 0;
@@ -45,6 +46,11 @@ namespace RPG_Game
             RightHand = null;
             Coins = 0;
             Gold = 0;
+            nearbyEnemies = new Dictionary<Direction, IEnemy?>();
+            nearbyEnemies.Add(Direction.Left, null);
+            nearbyEnemies.Add(Direction.Right, null);
+            nearbyEnemies.Add(Direction.Up, null);
+            nearbyEnemies.Add(Direction.Down, null);
         }
         public int GetMaxHealth => _maxHealth;
 
@@ -332,6 +338,32 @@ namespace RPG_Game
                 RightHand = null;
                 return;
             }
+        }
+        public void UpdateNearbyEnemies(Room room)
+        {
+            int curX = X;
+            int curY = Y;
+
+            if (curY != 0 && room.Grid[curX, curY - 1].Enemy != null)
+            {
+                nearbyEnemies[Direction.Left] = room.Grid[curX, curY - 1].Enemy;
+            }
+            else nearbyEnemies[Direction.Left] = null;
+            if (curY != room.Width - 1 && room.Grid[curX, curY + 1].Enemy != null)
+            {
+                nearbyEnemies[Direction.Right] = room.Grid[curX, curY + 1].Enemy;
+            }
+            else nearbyEnemies[Direction.Right] = null;
+            if (curX != 0 && room.Grid[curX - 1, curY].Enemy != null)
+            {
+                nearbyEnemies[Direction.Up] = room.Grid[curX - 1, curY].Enemy;
+            }
+            else nearbyEnemies[Direction.Up] = null;
+            if (curX != room.Height - 1 && room.Grid[curX + 1, curY].Enemy != null)
+            {
+                nearbyEnemies[Direction.Down] = room.Grid[curX + 1, curY].Enemy;
+            }
+            else nearbyEnemies[Direction.Down] = null;
         }
     }
 }

@@ -51,7 +51,11 @@ namespace RPG_Game.Builders
         public IBuilder AddCentralRoom() { return this; }
         public IBuilder AddChambers() { return this; }
         public IBuilder AddPaths() { return this; }
-        public IBuilder AddEnemies() { return this; }
+        public IBuilder AddEnemies()
+        {
+            _instructions.Add($"{FormatKey(InputKeyConfiguration.Fight)} - Attack an enemy");
+            return this;
+        }
         public string GetFinalResult()
         {
             foreach (string instruction in _instructions)

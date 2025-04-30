@@ -20,10 +20,12 @@ namespace RPG_Game.InputHandlers
                 int oldY = game.player.Y;
                 game.player.newMove(direction, game.room);
                 game.player.NotifyObservers();
+                game.player.UpdateNearbyEnemies(game.room);
                 GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
                 GameDisplayer.Instance.UpdateMapCells(oldX, oldY, game.player.X, game.player.Y, game.room, game.player);
                 GameDisplayer.Instance.DrawGameStats(game.player);
                 GameDisplayer.Instance.DrawActivePotionEffects(game.player);
+                GameDisplayer.Instance.DrawNearbyEnemies(game.player);
                 return true;
             }
 
