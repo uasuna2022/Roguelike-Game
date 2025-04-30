@@ -18,5 +18,6 @@ namespace RPG_Game.Enemies
             player.Health -= finalDamage;
             GameDisplayer.Instance.AddNotification($"{Name} attacks you and deals {finalDamage} points of damage!");
         }
+        public override int Armor { get; } = 15;
     }
 }
