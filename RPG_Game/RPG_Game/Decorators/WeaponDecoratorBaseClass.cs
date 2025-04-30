@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RPG_Game.Decorators
 {
-    public abstract class WeaponDecoratorBaseClass: IWeapon
+    public abstract class WeaponDecoratorBaseClass: IWeapon, IHeavyWeapon, ILightWeapon, IMagicWeapon
     {
         protected IWeapon wrappedWeapon;
         protected WeaponDecoratorBaseClass(IWeapon weapon)
@@ -29,6 +29,14 @@ namespace RPG_Game.Decorators
         public virtual void PickUp(Player player, Room room)
         {
             player.AddItemToInventory(this, room);
+        }
+        public virtual int Accept(IAttackVisitor attackVisitor)
+        {
+            return ((dynamic)wrappedWeapon).Accept(attackVisitor);
+        }
+        public virtual int AcceptDefense(IDefenseVisitor defenseVisitor)
+        {
+            return ((dynamic)wrappedWeapon).AcceptDefense(defenseVisitor);
         }
     }
 }

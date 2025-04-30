@@ -18,6 +18,6 @@ namespace RPG_Game.Enemies
             player.Luck -= 10;
             GameDisplayer.Instance.AddNotification($"I'm a rat! I don't deal damage, but I can make you so unlucky XD. Your luck reduced by 10 points");
         }
-        public override int Armor { get; } = 3;
+        public override int Armor => 3;
     }
 }

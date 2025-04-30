@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -28,6 +29,14 @@ namespace RPG_Game.Items
         public virtual void PickUp(Player player, Room room) //
         {
             player.AddItemToInventory(this, room);
+        }
+        public virtual int Accept(IAttackVisitor attackVisitor)
+        {
+            return attackVisitor.VisitNonWeapon(this);
+        }
+        public virtual int AcceptDefense(IDefenseVisitor defenseVisitor)
+        {
+            return defenseVisitor.VisitNonWeapon(this);
         }
     }
 }

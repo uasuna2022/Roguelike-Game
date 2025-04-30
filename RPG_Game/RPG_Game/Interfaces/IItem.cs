@@ -18,5 +18,7 @@ namespace RPG_Game.Interfaces
         void PickUp (Player player, Room room);  
         bool IsEquippable { get; }
         bool IsDrinkable { get; }
+        int Accept(IAttackVisitor attackVisitor);
+        int AcceptDefense(IDefenseVisitor defenseVisitor);
     }
 }

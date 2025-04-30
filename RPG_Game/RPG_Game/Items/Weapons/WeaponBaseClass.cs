@@ -17,6 +17,16 @@ namespace RPG_Game.Items.Weapons
             Damage = damage;
             IsTwoHanded = isTwoHanded;
         }
+
+        public override int Accept(IAttackVisitor attackVisitor)
+        {
+            return base.Accept(attackVisitor);
+        }
+        public override int AcceptDefense(IDefenseVisitor defenseVisitor)
+        {
+            return 0;
+        }
+
         // dodać PickUpWeapon() {}
     }
 }
