@@ -334,25 +334,25 @@ namespace RPG_Game
             Console.SetCursorPosition(_enemyInfoLeft, row++);
             if (up != null)
             {
-                Console.WriteLine($"Up: {up.Name}".PadRight(26));
+                Console.WriteLine($"Up: {up.Name} - {up.Health}".PadRight(26));
             }
             else Console.WriteLine($"Up: nobody".PadRight(26));
             Console.SetCursorPosition(_enemyInfoLeft, row++);
             if (down != null)
             {
-                Console.WriteLine($"Down: {down.Name}".PadRight(26));
+                Console.WriteLine($"Down: {down.Name} - {down.Health}".PadRight(26));
             }
             else Console.WriteLine($"Down: nobody".PadRight(26));
             Console.SetCursorPosition(_enemyInfoLeft, row++);
             if (left != null)
             {
-                Console.WriteLine($"Left: {left.Name}".PadRight(26));
+                Console.WriteLine($"Left: {left.Name} - {left.Health}".PadRight(26));
             }
             else Console.WriteLine("Left: nobody".PadRight(26));
             Console.SetCursorPosition(_enemyInfoLeft, row++);
             if (right != null)
             {
-                Console.WriteLine($"Right: {right.Name}".PadRight(26));
+                Console.WriteLine($"Right: {right.Name} - {right.Health}".PadRight(26));
             }
             else Console.WriteLine("Right: nobody".PadRight(26));
         }
