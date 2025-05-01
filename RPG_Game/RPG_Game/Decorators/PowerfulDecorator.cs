@@ -15,13 +15,5 @@ namespace RPG_Game.Decorators
             return base.GetDisplayName() + " (Powerful)";
         }
         public override int Damage => base.Damage + 5;
-        public override int Accept(IAttackVisitor attackVisitor)
-        {
-            return wrappedWeapon.Accept(attackVisitor) + 5;
-        }
-        public override int AcceptDefense(IDefenseVisitor defenseVisitor)
-        {
-            return wrappedWeapon.AcceptDefense(defenseVisitor);
-        }
     }
 }

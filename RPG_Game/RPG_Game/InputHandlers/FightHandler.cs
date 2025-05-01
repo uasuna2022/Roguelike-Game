@@ -92,11 +92,6 @@ namespace RPG_Game.InputHandlers
                 }
             }
 
-            if (game.player.LeftHand != null)
-            {
-                
-            }
-
             GameDisplayer.Instance.AddNotification("Choose an attack type: N - normal, S - stealth, M - magic");
             bool flag = false;
             int totalAttackHP = 0;
@@ -127,7 +122,8 @@ namespace RPG_Game.InputHandlers
 
             int damageToEnemy = Math.Max(0, totalAttackHP - opponent.Armor);
             opponent.Health -= damageToEnemy;
-            GameDisplayer.Instance.AddNotification($"{opponent.Name}'s health reduced by {damageToEnemy} HP!");
+            GameDisplayer.Instance.AddNotification($"{opponent.Name}'s health reduced by {damageToEnemy} HP!" +
+                $" (used armor: {Math.Min(opponent.Armor, totalAttackHP)} / {opponent.Armor})");
             GameDisplayer.Instance.DrawNearbyEnemies(game.player);
 
             if (opponent.Health <= 0)
@@ -148,9 +144,11 @@ namespace RPG_Game.InputHandlers
             int counterAttackDamage = Math.Max(0, opponent.Damage - totalDefenseHP);
             game.player.Health -= counterAttackDamage;
             GameDisplayer.Instance.AddNotification($"{opponent.Name} counterattacks you and deals {counterAttackDamage} HP! " +
-                $"(blocked: {totalDefenseHP})");
+                $"(blocked: {Math.Min(opponent.Damage, totalDefenseHP)} / {totalDefenseHP})");
             if (game.player.Health <= 0)
             {
+                game.player.Health = 0;
+                GameDisplayer.Instance.DrawPlayerStats(game.player);
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 GameDisplayer.Instance.AddNotification("YOU DIED! GAME OVER!");
                 Console.ResetColor();
@@ -192,7 +190,7 @@ namespace RPG_Game.InputHandlers
                 totalDefenseHP += game.player.LeftHand.AcceptDefense(defenseVisitor);
             }
 
-            if (game.player.RightHand != null && game.player.LeftHand!.IsTwoHanded == false)
+            if (game.player.RightHand != null && game.player.RightHand!.IsTwoHanded == false)
             {
                 switch (typeOfAttack)
                 {

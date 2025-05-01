@@ -20,7 +20,7 @@ namespace RPG_Game.AttackVisitors
         }
         public override int VisitMagicWeapon(IMagicWeapon magicWeapon)
         {
-            return magicWeapon.Damage + player.Wisdom;
+            return ((IWeapon)weapon).Damage + player.Wisdom;
         }
         public override int VisitNonWeapon(IItem nonWeapon)
         {

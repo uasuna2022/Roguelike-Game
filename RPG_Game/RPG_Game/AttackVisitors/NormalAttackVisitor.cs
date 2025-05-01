@@ -12,11 +12,11 @@ namespace RPG_Game.AttackVisitors
         public NormalAttackVisitor(IItem weapon, Player player) : base(weapon, player) { }
         public override int VisitHeavyWeapon(IHeavyWeapon heavyWeapon)
         {
-            return heavyWeapon.Damage + player.Strength + player.Aggression;
+            return ((IWeapon)weapon).Damage + player.Strength + player.Aggression;
         }
         public override int VisitLightWeapon(ILightWeapon lightWeapon)
         {
-            return lightWeapon.Damage + player.Dexterity + player.Luck;
+            return ((IWeapon)weapon).Damage + player.Dexterity + player.Luck;
         }
         public override int VisitMagicWeapon(IMagicWeapon magicWeapon)
         {
