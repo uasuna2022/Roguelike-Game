@@ -14,7 +14,6 @@ namespace RPG_Game.Enemies
         public virtual ConsoleColor Color => ConsoleColor.Red;
         public abstract int Health { get; set; }
         public abstract int Damage { get; }
-        public abstract void AttackPlayer(Player player); 
         public abstract int Armor { get; }
     }
 }

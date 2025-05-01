@@ -12,12 +12,6 @@ namespace RPG_Game.Enemies
         public override char Symbol => 'G';
         public override int Damage => 10;
         public override int Health { get; set; } = 20;
-        public override void AttackPlayer(Player player)
-        {
-            int finalDamage = player.Health >= Damage ? Damage : player.Health;
-            player.Health -= finalDamage;
-            GameDisplayer.Instance.AddNotification($"{Name} attacks you and deals {finalDamage} points of damage!");
-        }
         public override int Armor => 15;
     }
 }

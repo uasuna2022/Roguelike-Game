@@ -13,11 +13,6 @@ namespace RPG_Game.Enemies
         public override char Symbol => 'R';
         public override int Damage => 0;
         public override int Health { get; set; } = 5;
-        public override void AttackPlayer(Player player)
-        {
-            player.Luck -= 10;
-            GameDisplayer.Instance.AddNotification($"I'm a rat! I don't deal damage, but I can make you so unlucky XD. Your luck reduced by 10 points");
-        }
         public override int Armor => 3;
     }
 }

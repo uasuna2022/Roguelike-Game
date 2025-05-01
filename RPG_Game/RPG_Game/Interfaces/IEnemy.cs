@@ -13,7 +13,6 @@ namespace RPG_Game.Interfaces
         ConsoleColor Color { get; }
         int Damage { get; }
         int Health { get; set; }
-        void AttackPlayer(Player player);
         int Armor { get; }
     }
 }

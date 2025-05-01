@@ -35,7 +35,7 @@ namespace RPG_Game
             Y = 0;
             Strength = 20;
             Dexterity = 20;
-            Health = 30;
+            Health = 100;
             _maxHealth = 100;
             Luck = 5;
             Aggression = 0;
