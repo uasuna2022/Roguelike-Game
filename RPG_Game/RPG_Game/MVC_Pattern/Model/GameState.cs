@@ -11,6 +11,7 @@ namespace RPG_Game.MVC_Pattern.Model
         public List<Player> Players { get; }
         public Room Room { get; }
         public int Version { get; }
+        public int StepCounter { get; set; }
         public GameState(List<Player> players, Room room, int version)
         {
             Players = players;
@@ -27,6 +28,11 @@ namespace RPG_Game.MVC_Pattern.Model
         public void InvokeStateChanged()
         {
             StateChanged?.Invoke(this, EventArgs.Empty);
+        }
+        public void IncrementStepCounter()
+        {
+            StepCounter++;
+            InvokeStateChanged(); // zmienię to na inny event później
         }
     }
 }

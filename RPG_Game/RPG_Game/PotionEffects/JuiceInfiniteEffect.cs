@@ -27,7 +27,7 @@ namespace RPG_Game.PotionEffects
             */
             player.Dexterity -= _dexterityBoost;
             //GameDisplayer.Instance.AddNotification($"Juice's been cancelled. Player's dexterity decreased by {_dexterityBoost}!");
-            player.Notify($"Player's dexterity increased by {_dexterityBoost} for infinite amount of steps!");
+            player.Notify($"Juice's been cancelled. Player's dexterity decreased by {_dexterityBoost}!");
             player.activeEffects.Remove(this);
         }
         public override string ToString()

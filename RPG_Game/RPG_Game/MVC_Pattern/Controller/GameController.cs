@@ -47,8 +47,6 @@ namespace RPG_Game.MVC_Pattern.Controller
                 _rootHandler.HandleInput(consoleKeyInfo, this);
                 // count steps
             }
-        }
-
-        
+        }      
     }
 }

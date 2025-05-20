@@ -29,7 +29,6 @@ namespace RPG_Game.MVC_Pattern.View
         private const int _instructionsTop = 21;
         private const int _instructionsLeft = 0;
 
-        private int _stepCount;
         private const int _gameStatsTop = 0;
         private const int _gameStatsLeft = 43;
         private const int _cellStatsTop = 4;
@@ -44,7 +43,6 @@ namespace RPG_Game.MVC_Pattern.View
         public void Initialize(GameState gameState, int localPlayerIndex, string instructions)
         {
             _gameState = gameState;
-            _stepCount = 0;
             _localPlayerIdx = localPlayerIndex;
 
             if (_gameState != null)
@@ -302,7 +300,7 @@ namespace RPG_Game.MVC_Pattern.View
             Console.SetCursorPosition(_gameStatsLeft, row++);
             Console.WriteLine($"Current Tile: ({player.X}, {player.Y})".PadRight(30));
             Console.SetCursorPosition(_gameStatsLeft, row++);
-            Console.WriteLine($"Step Counter: {_stepCount}");
+            Console.WriteLine($"Step Counter: {_gameState.StepCounter}");
             //_stepCount++;
         } // changed
         public void DrawCellStats()

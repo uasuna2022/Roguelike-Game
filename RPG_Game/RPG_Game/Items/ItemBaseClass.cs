@@ -29,6 +29,7 @@ namespace RPG_Game.Items
         public virtual void PickUp(Player player, Room room) //
         {
             player.AddItemToInventory(this, room);
+            player.Refresh();
         }
         public virtual int Accept(IAttackVisitor attackVisitor)
         {
