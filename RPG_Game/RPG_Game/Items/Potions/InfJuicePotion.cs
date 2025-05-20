@@ -22,7 +22,8 @@ namespace RPG_Game.Items.Potions
             player.Attach(juiceInfiniteEffect);
             juiceInfiniteEffect.AfterApply();
             player.activeEffects.Add(juiceInfiniteEffect);
-            GameDisplayer.Instance.DrawActivePotionEffects(player);
+            //GameDisplayer.Instance.DrawActivePotionEffects(player);
+            player.Refresh(); // custom event for the Potion refresh todo
         }
     }
 }

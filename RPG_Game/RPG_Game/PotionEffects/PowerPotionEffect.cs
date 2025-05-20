@@ -16,12 +16,14 @@ namespace RPG_Game.PotionEffects
         public override void AfterApply()
         {
             player.Strength += _strengthBoost;
-            GameDisplayer.Instance.AddNotification($"Player's strength increased by {_strengthBoost} for {turnsRemaining} steps!");
+            //GameDisplayer.Instance.AddNotification($"Player's strength increased by {_strengthBoost} for {turnsRemaining} steps!");
+            player.Notify($"Player's strength increased by {_strengthBoost} for {turnsRemaining} steps!");
         }
         public override void AfterExpire()
         {
             player.Strength -= _strengthBoost;
-            GameDisplayer.Instance.AddNotification($"Power Potion expired! Player's strength decreased by {_strengthBoost}!");
+            //GameDisplayer.Instance.AddNotification($"Power Potion expired! Player's strength decreased by {_strengthBoost}!");
+            player.Notify($"Power Potion expired! Player's strength decreased by {_strengthBoost}!");
             player.activeEffects.Remove(this);
         }
         public override string ToString()

@@ -16,8 +16,8 @@ namespace RPG_Game
     {
         private GameState? _gameState;
         public void SetGameState(GameState gameState) => _gameState = gameState;
-        private void Notify(string message) => _gameState?.InvokeNotificationAdded(message);
-        private void Refresh() => _gameState?.InvokeStateChanged();
+        public void Notify(string message) => _gameState?.InvokeNotificationAdded(message);
+        public void Refresh() => _gameState?.InvokeStateChanged();
 
         public int X {  get; set; }
         public int Y { get; set; }

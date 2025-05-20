@@ -22,7 +22,8 @@ namespace RPG_Game.Items.Potions
             player.Attach(luckPotionEffect);
             luckPotionEffect.AfterApply();
             player.activeEffects.Add(luckPotionEffect);
-            GameDisplayer.Instance.DrawActivePotionEffects(player);
+            //GameDisplayer.Instance.DrawActivePotionEffects(player);
+            player.Refresh(); // *
         }
     }
 }

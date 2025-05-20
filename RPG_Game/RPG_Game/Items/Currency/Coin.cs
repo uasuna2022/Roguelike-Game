@@ -22,7 +22,9 @@ namespace RPG_Game.Items.Currency
         {
             player.Coins += Amount;
             room.Grid[player.X, player.Y].RemoveTopItem();
-            GameDisplayer.Instance.AddNotification($"Picked up {Amount} of coins!");
+            //GameDisplayer.Instance.AddNotification($"Picked up {Amount} of coins!");
+            player.Notify($"Picked up {Amount} of coins!");
+            player.Refresh();
         }
     }
 }

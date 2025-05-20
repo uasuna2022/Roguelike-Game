@@ -17,7 +17,8 @@ namespace RPG_Game.Items.Potions
             PotionEffectBaseClass antiPotionEffect = CreatePotionEffect(player);
             player.Attach(antiPotionEffect);
             antiPotionEffect.AfterApply();
-            GameDisplayer.Instance.DrawActivePotionEffects(player);
+            //GameDisplayer.Instance.DrawActivePotionEffects(player);  *
+            player.Refresh();
         }
         public PotionEffectBaseClass CreatePotionEffect(Player player)
         {

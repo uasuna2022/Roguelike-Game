@@ -16,8 +16,9 @@ namespace RPG_Game.PotionEffects
                 effect.AfterExpire();
             }
             player.observers.Clear();
-            GameDisplayer.Instance.ClearNotifications();
-            GameDisplayer.Instance.AddNotification("All effects cancelled!");
+            //GameDisplayer.Instance.ClearNotifications();
+            //GameDisplayer.Instance.AddNotification("All effects cancelled!");
+            player.Notify("All effects cancelled!");
         }
         public override void Update() { }
         public override string ToString()

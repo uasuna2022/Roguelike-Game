@@ -16,7 +16,8 @@ namespace RPG_Game.PotionEffects
         public override void AfterApply()
         {
             player.Dexterity += _dexterityBoost;
-            GameDisplayer.Instance.AddNotification($"Player's dexterity increased by {_dexterityBoost} for infinite amount of steps!");
+            //GameDisplayer.Instance.AddNotification($"Player's dexterity increased by {_dexterityBoost} for infinite amount of steps!");
+            player.Notify($"Player's dexterity increased by {_dexterityBoost} for infinite amount of steps!");
         }
         public override void AfterExpire()
         {
@@ -25,7 +26,8 @@ namespace RPG_Game.PotionEffects
                                 // however after implementing antidotes it can potentially be called
             */
             player.Dexterity -= _dexterityBoost;
-            GameDisplayer.Instance.AddNotification($"Juice's been cancelled. Player's dexterity decreased by {_dexterityBoost}!");
+            //GameDisplayer.Instance.AddNotification($"Juice's been cancelled. Player's dexterity decreased by {_dexterityBoost}!");
+            player.Notify($"Player's dexterity increased by {_dexterityBoost} for infinite amount of steps!");
             player.activeEffects.Remove(this);
         }
         public override string ToString()

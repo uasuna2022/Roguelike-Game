@@ -22,7 +22,8 @@ namespace RPG_Game.Items.Potions
             player.Attach(powerPotionEffect);
             powerPotionEffect.AfterApply();
             player.activeEffects.Add(powerPotionEffect);
-            GameDisplayer.Instance.DrawActivePotionEffects(player);
+            //GameDisplayer.Instance.DrawActivePotionEffects(player);
+            player.Refresh();
         }
         
     }
