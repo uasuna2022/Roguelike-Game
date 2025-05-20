@@ -25,9 +25,9 @@ namespace RPG_Game.InputHandlers
                 //int oldY = player.Y;
                 player.newMove(direction, room);
                 player.NotifyObservers();
-                controller.GameState.IncrementStepCounter();
-                /*
+                controller.GameState.IncrementStepCounter(); 
                 player.UpdateNearbyEnemies(room);
+                /*
                 GameDisplayer.Instance.DrawCellStats(room.GetCell(player.X, player.Y));
                 GameDisplayer.Instance.UpdateMapCells(oldX, oldY, player.X, player.Y, room, player);
                 GameDisplayer.Instance.DrawGameStats(player);

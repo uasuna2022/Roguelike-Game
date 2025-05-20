@@ -164,10 +164,11 @@ namespace RPG_Game.InputHandlers
 
             int counterAttackDamage = Math.Max(0, opponent.Damage - totalDefenseHP);
             player.Health -= counterAttackDamage;
-            GameDisplayer.Instance.AddNotification($"{opponent.Name} counterattacks you and deals {counterAttackDamage} HP! " +
-                $"(blocked: {Math.Min(opponent.Damage, totalDefenseHP)} / {totalDefenseHP})");
+            //GameDisplayer.Instance.AddNotification($"{opponent.Name} counterattacks you and deals {counterAttackDamage} HP! " +
+                //$"(blocked: {Math.Min(opponent.Damage, totalDefenseHP)} / {totalDefenseHP})");
             player.Notify($"{opponent.Name} counterattacks you and deals {counterAttackDamage} HP! " +
                 $"(blocked: {Math.Min(opponent.Damage, totalDefenseHP)} / {totalDefenseHP})");
+            player.Refresh();
             if (player.Health <= 0)
             {
                 player.Health = 0;

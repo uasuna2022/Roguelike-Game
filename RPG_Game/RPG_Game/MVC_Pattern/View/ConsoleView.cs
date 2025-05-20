@@ -86,7 +86,7 @@ namespace RPG_Game.MVC_Pattern.View
                         if (pl.X == i && pl.Y == j)
                         {
                             Console.ForegroundColor = (playerIdx == _localPlayerIdx) ? ConsoleColor.DarkYellow : ConsoleColor.DarkCyan;
-                            Console.Write($"{playerIdx}"); 
+                            Console.Write($"{playerIdx + 1}"); 
                             Console.ResetColor();
                             anyOther = true;
                             break;
