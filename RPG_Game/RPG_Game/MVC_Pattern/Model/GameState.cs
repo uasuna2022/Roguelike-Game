@@ -20,5 +20,13 @@ namespace RPG_Game.MVC_Pattern.Model
 
         public event EventHandler? StateChanged;
         public event Action<string>? NotificationAdded;
+        public void InvokeNotificationAdded(string message)
+        {
+            NotificationAdded?.Invoke(message);
+        }
+        public void InvokeStateChanged()
+        {
+            StateChanged?.Invoke(this, EventArgs.Empty);
+        }
     }
 }
