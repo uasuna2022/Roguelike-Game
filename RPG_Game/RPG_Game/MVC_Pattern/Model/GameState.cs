@@ -17,5 +17,8 @@ namespace RPG_Game.MVC_Pattern.Model
             Room = room;
             Version = version;
         }
+
+        public event EventHandler? StateChanged;
+        public event Action<string>? NotificationAdded;
     }
 }
