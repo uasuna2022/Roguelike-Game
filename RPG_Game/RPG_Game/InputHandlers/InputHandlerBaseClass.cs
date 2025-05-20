@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RPG_Game.MVC_Pattern.Controller;
 
 namespace RPG_Game.InputHandlers
 {
@@ -15,12 +16,12 @@ namespace RPG_Game.InputHandlers
             _nextHandler = nextHandler;
             return _nextHandler;
         }
-        protected abstract bool Process(ConsoleKeyInfo consoleKey, Game game);
-        public void HandleInput(ConsoleKeyInfo consoleKey, Game game)
+        protected abstract bool Process(ConsoleKeyInfo consoleKey, GameController controller);
+        public void HandleInput(ConsoleKeyInfo consoleKey, GameController controller)
         {
-            if (!Process(consoleKey, game))
+            if (!Process(consoleKey, controller))
             {
-                _nextHandler?.HandleInput(consoleKey, game);
+                _nextHandler?.HandleInput(consoleKey, controller);
             }
         }
 

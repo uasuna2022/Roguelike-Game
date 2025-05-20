@@ -4,34 +4,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RPG_Game.MVC_Pattern.Controller;
 
 namespace RPG_Game.InputHandlers
 {
     public class MoveHandler: InputHandlerBaseClass
     {
-        protected override bool Process(ConsoleKeyInfo consoleKey, Game game)
+        protected override bool Process(ConsoleKeyInfo consoleKey, GameController controller)
         {
             Direction? direction = DirectionFromKey(consoleKey);
             if (direction == null)
                 return false;
-            if (game.player.newIsValidMove(direction, game.room))
+
+            Player player = controller.GameState.Players[controller.LocalPlayerIdx];
+            Room room = controller.GameState.Room;
+
+            if (player.newIsValidMove(direction, room))
             {
-                int oldX = game.player.X;
-                int oldY = game.player.Y;
-                game.player.newMove(direction, game.room);
-                game.player.NotifyObservers();
-                game.player.UpdateNearbyEnemies(game.room);
-                GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
-                GameDisplayer.Instance.UpdateMapCells(oldX, oldY, game.player.X, game.player.Y, game.room, game.player);
-                GameDisplayer.Instance.DrawGameStats(game.player);
-                GameDisplayer.Instance.DrawActivePotionEffects(game.player);
-                GameDisplayer.Instance.DrawNearbyEnemies(game.player);
+                int oldX = player.X;
+                int oldY = player.Y;
+                player.newMove(direction, room);
+                /*
+                player.NotifyObservers();
+                player.UpdateNearbyEnemies(room);
+                GameDisplayer.Instance.DrawCellStats(room.GetCell(player.X, player.Y));
+                GameDisplayer.Instance.UpdateMapCells(oldX, oldY, player.X, player.Y, room, player);
+                GameDisplayer.Instance.DrawGameStats(player);
+                GameDisplayer.Instance.DrawActivePotionEffects(player);
+                GameDisplayer.Instance.DrawNearbyEnemies(player);
+                */
+                player.Refresh();
                 return true;
             }
 
             else
             {
-                GameDisplayer.Instance.AddNotification("You can't go that way!");
+                //GameDisplayer.Instance.AddNotification("You can't go that way!");
+                player.Notify("You can't go that way!");
                 return true;
             } 
         }

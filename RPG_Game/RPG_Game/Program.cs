@@ -2,6 +2,7 @@
 using RPG_Game.Interfaces;
 using RPG_Game.Items.UnusableItems;
 using RPG_Game.Items.Weapons;
+using RPG_Game.MVC_Pattern.Controller;
 using System;
 using System.Runtime.InteropServices;
 
@@ -29,9 +30,13 @@ namespace RPG_Game
                 }
             }
 
+            /*
             Game game = new Game(version);
             game.BuildGame(version);
             game.StartGame();
+            */
+            GameController gameController = new GameController(version);
+            gameController.Run();
         }
     }
 }

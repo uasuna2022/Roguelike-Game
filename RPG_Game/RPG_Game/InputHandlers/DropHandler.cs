@@ -5,79 +5,95 @@ using System.Text;
 using System.Threading.Tasks;
 using RPG_Game.EnumClasses;
 using RPG_Game.Interfaces;
+using RPG_Game.MVC_Pattern.Controller;
 
 namespace RPG_Game.InputHandlers
 {
     public class DropHandler: InputHandlerBaseClass
     {
-        protected override bool Process(ConsoleKeyInfo consoleKey, Game game)
+        protected override bool Process(ConsoleKeyInfo consoleKey, GameController controller)
         {
             if (consoleKey.Key != InputKeyConfiguration.DropItem)
                 return false;
-            if (game.player.Inventory.Count == 0 && game.player.LeftHand == null && game.player.RightHand == null)
+
+            Player player = controller.GameState.Players[controller.LocalPlayerIdx];
+            Room room = controller.GameState.Room;
+
+            if (player.Inventory.Count == 0 && player.LeftHand == null && player.RightHand == null)
             {
-                GameDisplayer.Instance.AddNotification("There is nothing to drop at the moment. Pick up some item to be able to equip or drop it!");
+                //GameDisplayer.Instance.AddNotification("There is nothing to drop at the moment. Pick up some item to be able to equip or drop it!");
+                player.Notify("There is nothing to drop at the moment. Pick up some item to be able to equip or drop it!");
                 return true;
             }
-            GameDisplayer.Instance.AddNotification("Enter 'A' if you want to drop all the items you have;");
-            GameDisplayer.Instance.AddNotification("Enter 'L' to drop an item from your left hand, 'R' - from your right hand;");
-            GameDisplayer.Instance.AddNotification("Enter a digit (0-9) to drop the concrete item from the inventory");
+            player.Notify("Enter 'A' if you want to drop all the items you have;");
+            player.Notify("Enter 'L' to drop an item from your left hand, 'R' - from your right hand;");
+            player.Notify("Enter a digit (0-9) to drop the concrete item from the inventory");
             ConsoleKeyInfo additionalConsoleKey = Console.ReadKey(true);
             char additionalChar = char.ToUpper(additionalConsoleKey.KeyChar);
             int index = additionalChar - 48;
             if (index == 0) index += 10;
             if (index > 0 && index <= 10)
             {
-                if (index > game.player.Inventory.Count)
+                if (index > player.Inventory.Count)
                 {
-                    GameDisplayer.Instance.AddNotification($"You don't have an item with this number in your inventory! Try again!");
+                    //GameDisplayer.Instance.AddNotification($"You don't have an item with this number in your inventory! Try again!");
+                    player.Notify($"You don't have an item with this number in your inventory! Try again!");
                     return true;
                 }
-                IItem chosenItem = game.player.Inventory[index - 1];
-                game.player.DropItemFromInventory(chosenItem, game.room);
-                GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
+                IItem chosenItem = player.Inventory[index - 1];
+                player.DropItemFromInventory(chosenItem, room);
+                //GameDisplayer.Instance.DrawCellStats(room.GetCell(player.X, player.Y));
+                player.Refresh();
                 return true;
             }
 
             switch (additionalChar)
             {
                 case 'A':
-                    GameDisplayer.Instance.AddNotification("Are you sure you want to empty both of your hands and your inventory? (Y - yes, N - no)");
+                    //GameDisplayer.Instance.AddNotification("Are you sure you want to empty both of your hands and your inventory? (Y - yes, N - no)");
+                    player.Notify("Are you sure you want to empty both of your hands and your inventory? (Y - yes, N - no)");
                     ConsoleKeyInfo agreementConsoleKey = Console.ReadKey(true);
                     if (char.ToUpper(agreementConsoleKey.KeyChar) == 'N')
                     {
-                        GameDisplayer.Instance.AddNotification("Operation cancelled.");
+                        //GameDisplayer.Instance.AddNotification("Operation cancelled.");
+                        player.Notify("Operation cancelled.");
                         return true;
                     }
                     else if (char.ToUpper(agreementConsoleKey.KeyChar) == 'Y')
                     {
-                        game.player.newDropItemFromHand(Hand.Left, game.room);
-                        game.player.newDropItemFromHand(Hand.Right, game.room);
-                        while (game.player.Inventory.Count > 0)
+                        player.newDropItemFromHand(Hand.Left, room);
+                        player.newDropItemFromHand(Hand.Right, room);
+                        while (player.Inventory.Count > 0)
                         {
-                            IItem item = game.player.Inventory[0];
-                            game.player.DropItemFromInventory(item, game.room);
+                            IItem item = player.Inventory[0];
+                            player.DropItemFromInventory(item, room);
                         }
                         GameDisplayer.Instance.ClearNotifications();
-                        GameDisplayer.Instance.AddNotification($"Everything dropped on the tile ({game.player.X}, {game.player.Y})");
-                        GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
+                        GameDisplayer.Instance.AddNotification($"Everything dropped on the tile ({player.X}, {player.Y})");
+                        GameDisplayer.Instance.DrawCellStats(room.GetCell(player.X, player.Y));
+                        player.Notify($"Everything dropped on the tile ({player.X}, {player.Y})");
+                        player.Refresh();
                         return true;
                     }
                     else
                     {
-                        GameDisplayer.Instance.AddNotification("Invalid input. Enter 'X' to see again all the options!");
+                        //GameDisplayer.Instance.AddNotification("Invalid input. Enter 'X' to see again all the options!");
+                        player.Notify("Invalid input. Enter 'X' to see again all the options!");
                         return true;
                     }
                 case 'L':
-                    game.player.newDropItemFromHand(Hand.Left, game.room);
-                    GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
+                    player.newDropItemFromHand(Hand.Left, room);
+                    //GameDisplayer.Instance.DrawCellStats(room.GetCell(player.X, player.Y));
+                    player.Refresh();
                     break;
                 case 'R':
-                    game.player.newDropItemFromHand(Hand.Right, game.room);
-                    GameDisplayer.Instance.DrawCellStats(game.room.GetCell(game.player.X, game.player.Y));
+                    player.newDropItemFromHand(Hand.Right, room);
+                    //GameDisplayer.Instance.DrawCellStats(room.GetCell(player.X, player.Y));
+                    player.Refresh();
                     break;
                 default:
-                    GameDisplayer.Instance.AddNotification("Invalid input. Enter 'X' to see again all the options!");
+                    //GameDisplayer.Instance.AddNotification("Invalid input. Enter 'X' to see again all the options!");
+                    player.Notify("Invalid input. Enter 'X' to see again all the options!");
                     break;
             }
             return true;

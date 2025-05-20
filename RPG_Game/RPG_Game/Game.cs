@@ -13,6 +13,7 @@ namespace RPG_Game
 {
     public class Game
     {
+        /*
         public Player player;
         public Room room = new Room();
         private string _instructions;
@@ -72,5 +73,6 @@ namespace RPG_Game
                 _gameDisplayer.DrawPlayerStats(player);   
             }
         }
+        */
     }
 }
