@@ -1,10 +1,13 @@
 ﻿using RPG_Game.Interfaces;
+using RPG_Game.JSON_Serialization;
 using RPG_Game.MVC_Pattern.Model;
 using RPG_Game.MVC_Pattern.View;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 
 namespace RPG_Game.MVC_Pattern.Controller
@@ -46,6 +49,17 @@ namespace RPG_Game.MVC_Pattern.Controller
                 ConsoleKeyInfo consoleKeyInfo = Console.ReadKey(true);
                 _rootHandler.HandleInput(consoleKeyInfo, this);
                 // count steps
+
+                /*
+                if (_gameState.StepCounter == 10)
+                {
+                    var dto = DTOMapper.ConvertToDTO(_gameState);
+                    var jsonOpts = new JsonSerializerOptions { WriteIndented = true };
+                    jsonOpts.Converters.Add(new JsonStringEnumConverter());
+                    string json = JsonSerializer.Serialize(dto, jsonOpts);
+                    File.WriteAllText("test.txt", json);
+                }
+                */
             }
         }      
     }

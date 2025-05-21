@@ -53,7 +53,7 @@ namespace RPG_Game
             //return _items.Peek();
             return Items[0];
         }
-
+        /*
         public void RemoveItemFromCell(IItem item)
         {
             if (!Items.Contains(item))
@@ -63,6 +63,6 @@ namespace RPG_Game
             }
             Items.Remove(item);
         }
-
+        */
     }
 }

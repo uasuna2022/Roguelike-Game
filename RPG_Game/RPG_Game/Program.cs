@@ -1,10 +1,14 @@
 ﻿using RPG_Game.Decorators;
 using RPG_Game.Interfaces;
+using RPG_Game.Items.Currency;
 using RPG_Game.Items.UnusableItems;
 using RPG_Game.Items.Weapons;
 using RPG_Game.MVC_Pattern.Controller;
 using System;
 using System.Runtime.InteropServices;
+using System.Text.Json.Serialization;
+using System.Text.Json;
+using RPG_Game.JSON_Serialization;
 
 namespace RPG_Game
 {
