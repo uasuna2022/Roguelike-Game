@@ -17,5 +17,6 @@ namespace RPG_Game.Interfaces
 
         int X { get; set; }
         int Y { get; set; }
+        IStrategy CurrentStrategy { get; set; }
     }
 }

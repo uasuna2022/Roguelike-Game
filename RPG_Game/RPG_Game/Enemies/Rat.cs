@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RPG_Game.Interfaces;
+using RPG_Game.Strategies;
 
 namespace RPG_Game.Enemies
 {
@@ -15,6 +16,6 @@ namespace RPG_Game.Enemies
         public override int Health { get; set; } = 5;
         public override int Armor => 3;
 
-        public Rat(int x, int y) : base(x, y) { }
+        public Rat(int x, int y) : base(x, y, new DefensiveStrategy()) { }
     }
 }

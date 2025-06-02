@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPG_Game.Strategies;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,6 +15,6 @@ namespace RPG_Game.Enemies
         public override int Health { get; set; } = 100;
         public override int Armor => 30;
 
-        public Dragon(int x, int y) : base(x, y) { }
+        public Dragon(int x, int y) : base(x, y, new CalmStrategy()) { }
     }
 }

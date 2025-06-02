@@ -18,11 +18,12 @@ namespace RPG_Game.Enemies
 
         public int X { get; set; }
         public int Y { get; set; }
-        protected EnemyBaseClass(int x, int y)
+        public IStrategy CurrentStrategy { get; set; }
+        protected EnemyBaseClass(int x, int y, IStrategy strategy)
         {
             X = x;
             Y = y;
-        }
-        
+            CurrentStrategy = strategy;
+        } 
     }
 }
