@@ -126,8 +126,12 @@ namespace RPG_Game
                     break;
             }
 
+            room.Grid[X, Y].ContainsPlayer = false;
+
             X = newX; 
             Y = newY;
+
+            room.Grid[X, Y].ContainsPlayer = true;
         }
         public void AddItemToInventory(IItem item, Room room)
         {

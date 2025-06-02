@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RPG_Game.MVC_Pattern.Controller;
+using RPG_Game.Interfaces;
 
 namespace RPG_Game.InputHandlers
 {
@@ -26,7 +27,6 @@ namespace RPG_Game.InputHandlers
                 player.newMove(direction, room);
                 player.NotifyObservers();
                 controller.GameState.IncrementStepCounter(); 
-                player.UpdateNearbyEnemies(room);
                 /*
                 GameDisplayer.Instance.DrawCellStats(room.GetCell(player.X, player.Y));
                 GameDisplayer.Instance.UpdateMapCells(oldX, oldY, player.X, player.Y, room, player);
@@ -34,7 +34,20 @@ namespace RPG_Game.InputHandlers
                 GameDisplayer.Instance.DrawActivePotionEffects(player);
                 GameDisplayer.Instance.DrawNearbyEnemies(player);
                 */
+
+                // CHANGES
+                foreach (IEnemy enemy in controller.GameState.Room.Enemies)
+                {
+                    enemy.CurrentStrategy.React(enemy, controller.GameState);
+                }
+
+                foreach (Player p in controller.GameState.Players)
+                {
+                    p.UpdateNearbyEnemies(controller.GameState.Room);
+                }
+
                 player.Refresh();
+
                 return true;
             }
 
@@ -57,5 +70,6 @@ namespace RPG_Game.InputHandlers
                 return Direction.Right;
             return null;
         }
+
     }
 }

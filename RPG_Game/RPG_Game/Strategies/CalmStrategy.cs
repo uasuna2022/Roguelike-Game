@@ -10,6 +10,6 @@ namespace RPG_Game.Strategies
 {
     public class CalmStrategy : IStrategy
     {
-        public void React(GameState gameState) { }  // does absolutely nothing 
+        public void React(IEnemy reactingEnemy, GameState gameState) { }  // does absolutely nothing 
     }
 }

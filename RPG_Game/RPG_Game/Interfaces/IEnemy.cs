@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RPG_Game.MVC_Pattern.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,10 +14,12 @@ namespace RPG_Game.Interfaces
         ConsoleColor Color { get; }
         int Damage { get; }
         int Health { get; set; }
+        int MaxHealth { get; }
         int Armor { get; }
 
         int X { get; set; }
         int Y { get; set; }
         IStrategy CurrentStrategy { get; set; }
+        (Player, int) FindNearestPlayer(GameState gameState);
     }
 }

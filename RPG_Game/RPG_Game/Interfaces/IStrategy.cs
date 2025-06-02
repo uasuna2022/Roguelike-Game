@@ -9,6 +9,6 @@ namespace RPG_Game.Interfaces
 {
     public interface IStrategy
     {
-        void React(GameState gameState);
+        void React(IEnemy reactingEnemy, GameState gameState);
     }
 }

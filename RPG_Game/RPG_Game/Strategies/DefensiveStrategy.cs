@@ -10,7 +10,7 @@ namespace RPG_Game.Strategies
 {
     public class DefensiveStrategy : IStrategy
     {
-        public void React(GameState gameState)
+        public void React(IEnemy reactingEnemy, GameState gameState)
         {
             // TODO
         }
