@@ -14,5 +14,8 @@ namespace RPG_Game.Interfaces
         int Damage { get; }
         int Health { get; set; }
         int Armor { get; }
+
+        int X { get; set; }
+        int Y { get; set; }
     }
 }

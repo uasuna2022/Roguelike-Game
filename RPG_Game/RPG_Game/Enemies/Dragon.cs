@@ -13,5 +13,7 @@ namespace RPG_Game.Enemies
         public override int Damage => 50;
         public override int Health { get; set; } = 100;
         public override int Armor => 30;
+
+        public Dragon(int x, int y) : base(x, y) { }
     }
 }

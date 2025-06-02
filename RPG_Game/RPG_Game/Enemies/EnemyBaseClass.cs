@@ -15,5 +15,14 @@ namespace RPG_Game.Enemies
         public abstract int Health { get; set; }
         public abstract int Damage { get; }
         public abstract int Armor { get; }
+
+        public int X { get; set; }
+        public int Y { get; set; }
+        protected EnemyBaseClass(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+        
     }
 }

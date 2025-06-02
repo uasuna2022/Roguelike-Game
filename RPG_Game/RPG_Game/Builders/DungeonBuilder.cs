@@ -70,13 +70,19 @@ namespace RPG_Game.Builders
                         switch (randomValue)
                         {
                             case 1:
-                                _room.Grid[i, j].AddEnemy(new Goblin());
+                                Goblin goblin = new Goblin(i, j);
+                                _room.Grid[i, j].AddEnemy(goblin);
+                                _room.Enemies.Add(goblin);
                                 break;
                             case 2:
-                                _room.Grid[i, j].AddEnemy(new Rat());
+                                Rat rat = new Rat(i, j);
+                                _room.Grid[i, j].AddEnemy(rat);
+                                _room.Enemies.Add(rat);
                                 break;
                             case 3:
-                                _room.Grid[i, j].AddEnemy(new Dragon());
+                                Dragon dragon = new Dragon(i, j);
+                                _room.Grid[i, j].AddEnemy(dragon);
+                                _room.Enemies.Add(dragon);
                                 break;
                             default:
                                 continue;

@@ -34,11 +34,6 @@ namespace RPG_Game
                 }
             }
 
-            /*
-            Game game = new Game(version);
-            game.BuildGame(version);
-            game.StartGame();
-            */
             GameController gameController = new GameController(version);
             gameController.Run();
         }

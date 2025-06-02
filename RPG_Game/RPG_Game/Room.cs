@@ -16,6 +16,7 @@ namespace RPG_Game
         public int Width = 40;
         public int Height = 20;
         public Cell[,] Grid;
+        public List<IEnemy> Enemies; // added
 
         public Room()
         {
@@ -27,6 +28,8 @@ namespace RPG_Game
                     Grid[i, j] = new Cell(i, j);
                 }
             }
+
+            Enemies = new List<IEnemy>(); // added
         }
         public Cell GetCell(int x, int y)
         {

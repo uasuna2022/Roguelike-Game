@@ -13,5 +13,7 @@ namespace RPG_Game.Enemies
         public override int Damage => 10;
         public override int Health { get; set; } = 20;
         public override int Armor => 15;
+
+        public Goblin(int x, int y) : base(x, y) { }
     }
 }
