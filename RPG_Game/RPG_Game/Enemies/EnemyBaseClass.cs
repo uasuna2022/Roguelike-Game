@@ -1,8 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RPG_Game.AttackVisitors;
+using RPG_Game.DefenseVisitors;
+using RPG_Game.EnumClasses;
+using RPG_Game.InputHandlers;
 using RPG_Game.Interfaces;
 using RPG_Game.MVC_Pattern.Model;
 
@@ -41,6 +46,35 @@ namespace RPG_Game.Enemies
             }
 
             return (nearestPlayer, distance);
+        }
+        public virtual void ReactOnMove(GameState gameState) => this.CurrentStrategy.React(this, gameState);
+        public virtual bool AttackPlayer(Player player) // false -> a player died, true -> a player survivedthe attack
+        {
+            DefenseVisitorBaseClass? defenseVisitor = null;
+            int totalDefenseHP = 0;
+            if (player.LeftHand != null)
+            { 
+                defenseVisitor = new NormalDefenseVisitor(player.LeftHand, player);
+                totalDefenseHP += player.LeftHand.AcceptDefense(defenseVisitor);
+            }
+
+            if (player.RightHand != null && player.RightHand!.IsTwoHanded == false)
+            {
+                defenseVisitor = new NormalDefenseVisitor(player.RightHand, player);
+                totalDefenseHP += player.RightHand.AcceptDefense(defenseVisitor);
+            }
+
+            int totalDamage = Math.Max(0, this.Damage - totalDefenseHP);
+            player.Health = (player.Health - totalDamage >= 0) ? player.Health - totalDamage : 0;
+            player.Notify($"Offensive enemy {this.Name} attacks you and deals {totalDamage} HP! " +
+                $"(blocked: {Math.Min(this.Damage, totalDefenseHP)} / {totalDefenseHP})");
+            player.Refresh();
+            if (player.Health == 0)
+            {
+                return false;
+            }
+
+            else return true;
         }
     }
 }

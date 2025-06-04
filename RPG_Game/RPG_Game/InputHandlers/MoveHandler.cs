@@ -38,7 +38,7 @@ namespace RPG_Game.InputHandlers
                 // CHANGES
                 foreach (IEnemy enemy in controller.GameState.Room.Enemies)
                 {
-                    enemy.CurrentStrategy.React(enemy, controller.GameState);
+                    enemy.ReactOnMove(controller.GameState);
                 }
 
                 foreach (Player p in controller.GameState.Players)

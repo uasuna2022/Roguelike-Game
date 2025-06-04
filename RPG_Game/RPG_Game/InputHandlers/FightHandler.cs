@@ -148,6 +148,7 @@ namespace RPG_Game.InputHandlers
                 //GameDisplayer.Instance.AddNotification($"{opponent.Name} defeated!");
                 player.Notify($"{opponent.Name} defeated!");
                 RemoveEnemyFromRoom(room, player, direction);
+                player.UpdateNearbyEnemies(room);
                 //player.UpdateNearbyEnemies(game.room);
                 /*
                 GameDisplayer.Instance.DrawNearbyEnemies(game.player);
@@ -189,7 +190,7 @@ namespace RPG_Game.InputHandlers
             return true;
         }
 
-        private (int, int) GetTotalAttackHPAndDefenseHP(Player player, TypeOfAttack typeOfAttack)
+        public (int, int) GetTotalAttackHPAndDefenseHP(Player player, TypeOfAttack typeOfAttack)
         {
             AttackVisitorBaseClass? attackVisitor = null;
             DefenseVisitorBaseClass? defenseVisitor = null;
@@ -257,8 +258,12 @@ namespace RPG_Game.InputHandlers
                 case Direction.Left: newY--; break;
                 case Direction.Right: newY++; break;
             }
+
             if (newX >= 0 && newY >= 0 && newX < room.Height && newY < room.Width)
+            {
+                room.Enemies.Remove(room.Grid[newX, newY].Enemy!);
                 room.Grid[newX, newY].Enemy = null;
+            }
         }
     }
 }

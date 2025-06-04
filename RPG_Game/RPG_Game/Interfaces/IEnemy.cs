@@ -21,5 +21,7 @@ namespace RPG_Game.Interfaces
         int Y { get; set; }
         IStrategy CurrentStrategy { get; set; }
         (Player, int) FindNearestPlayer(GameState gameState);
+        void ReactOnMove(GameState gamestate);
+        bool AttackPlayer(Player player);
     }
 }
