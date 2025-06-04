@@ -190,7 +190,7 @@ namespace RPG_Game.InputHandlers
             return true;
         }
 
-        public (int, int) GetTotalAttackHPAndDefenseHP(Player player, TypeOfAttack typeOfAttack)
+        private (int, int) GetTotalAttackHPAndDefenseHP(Player player, TypeOfAttack typeOfAttack)
         {
             AttackVisitorBaseClass? attackVisitor = null;
             DefenseVisitorBaseClass? defenseVisitor = null;
