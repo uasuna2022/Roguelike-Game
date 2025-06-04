@@ -9,6 +9,7 @@ using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 using RPG_Game.MVC_Pattern.Controller;
+using RPG_Game.Strategies;
 
 namespace RPG_Game.InputHandlers
 {
@@ -163,6 +164,7 @@ namespace RPG_Game.InputHandlers
                 return true;
             }
 
+
             int counterAttackDamage = Math.Max(0, opponent.Damage - totalDefenseHP);
             player.Health -= counterAttackDamage;
             //GameDisplayer.Instance.AddNotification($"{opponent.Name} counterattacks you and deals {counterAttackDamage} HP! " +
@@ -185,6 +187,12 @@ namespace RPG_Game.InputHandlers
                 GameDisplayer.Instance.AddNotification("Exiting game...");
                 */
                 Console.ReadKey();
+            }
+
+            if (opponent.Health * 2 < opponent.MaxHealth)
+            {
+                opponent.CurrentStrategy = new DefensiveStrategy();
+                opponent.ReactOnMove(controller.GameState);
             }
             
             return true;

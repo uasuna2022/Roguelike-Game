@@ -13,7 +13,6 @@ namespace RPG_Game.Strategies
     {
         public void React(IEnemy reactingEnemy, GameState gameState)
         {
-            // TODO
             Player threatPlayer;
             int distance;
             (threatPlayer, distance) = reactingEnemy.FindNearestPlayer(gameState);
@@ -98,8 +97,6 @@ namespace RPG_Game.Strategies
                 TryToRunSomewhere(possibleDirectionsToRun, reactingEnemy, gameState.Room);
                 return;
             }
-
-
         }
 
         private void TryToRunSomewhere (List<Direction> directions, IEnemy reactingEnemy, Room room)
@@ -162,7 +159,6 @@ namespace RPG_Game.Strategies
                 return false;
 
             return true;
-        }
-        
+        }    
     }
 }
