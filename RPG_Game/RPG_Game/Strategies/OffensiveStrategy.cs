@@ -183,7 +183,8 @@ namespace RPG_Game.Strategies
             {
                 if (!reactingEnemy.AttackPlayer(chasedPlayer))
                 {
-                    // TODO: the logic of the death (I need to pass is to controller somehow)
+                    chasedPlayer.Notify($"You were KILLED by {reactingEnemy.Name}! Game OVER!");
+                    chasedPlayer.OnPlayerDied();
                 }
             }
 

@@ -38,6 +38,8 @@ namespace RPG_Game.MVC_Pattern.Controller
 
             _consoleView = ConsoleView.Instance;
             _consoleView.Initialize(_gameState, _localPlayerIdx, instructions);
+
+            _gameState.Players[_localPlayerIdx].PlayerDied += RequestQuit;
         }
 
         public void Run()

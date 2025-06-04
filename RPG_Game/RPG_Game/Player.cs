@@ -400,5 +400,11 @@ namespace RPG_Game
             }
             else nearbyEnemies[Direction.Down] = null;
         }
+
+        public event Action? PlayerDied;
+        public void OnPlayerDied()
+        {
+            this.PlayerDied?.Invoke();
+        }
     }
 }
