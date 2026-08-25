@@ -1,13 +1,12 @@
-﻿using RPG_Game.Interfaces;
+using RPG_Game.Interfaces;
 using RPG_Game.MVC_Pattern.Model;
 using RPG_Game.PotionEffects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
-// 46px * 156px
+
 namespace RPG_Game.MVC_Pattern.View
 {
     public sealed class ConsoleView
@@ -40,6 +39,82 @@ namespace RPG_Game.MVC_Pattern.View
         private const int _enemyInfoTop = 0;
         private const int _enemyInfoLeft = 130;
 
+        // Diff buffering caches to prevent redundant Win32 Console API calls & eliminate input lag
+        private string[,] _lastRoomSymbol = new string[100, 100];
+        private ConsoleColor[,] _lastRoomColor = new ConsoleColor[100, 100];
+        private Dictionary<(int left, int top), string> _lastWrittenText = new();
+        private Dictionary<(int left, int top), ConsoleColor?> _lastWrittenColor = new();
+
+        private void ResetCaches()
+        {
+            _lastWrittenText.Clear();
+            _lastWrittenColor.Clear();
+            Array.Clear(_lastRoomSymbol, 0, _lastRoomSymbol.Length);
+            Array.Clear(_lastRoomColor, 0, _lastRoomColor.Length);
+        }
+
+        private void SafeWriteAt(int left, int top, string text, ConsoleColor? color = null)
+        {
+            try
+            {
+                if (left >= 0 && top >= 0 && left + text.Length < Console.BufferWidth && top < Console.BufferHeight)
+                {
+                    var key = (left, top);
+                    if (_lastWrittenText.TryGetValue(key, out string? oldText) &&
+                        _lastWrittenColor.TryGetValue(key, out ConsoleColor? oldColor) &&
+                        oldText == text && oldColor == color)
+                    {
+                        return; // Cell already contains exact text & color — skip Win32 call!
+                    }
+
+                    _lastWrittenText[key] = text;
+                    _lastWrittenColor[key] = color;
+
+                    Console.SetCursorPosition(left, top);
+                    if (color.HasValue) Console.ForegroundColor = color.Value;
+                    Console.Write(text);
+                    if (color.HasValue) Console.ResetColor();
+                }
+            }
+            catch
+            {
+                // Silently skip out-of-bounds draws
+            }
+        }
+
+        private void SafeWriteRoomCell(int row, int col, string symbol, ConsoleColor color)
+        {
+            if (row < 0 || row >= 100 || col < 0 || col >= 100) return;
+
+            if (_lastRoomSymbol[row, col] == symbol && _lastRoomColor[row, col] == color)
+            {
+                return; // Tile hasn't changed since last frame — skip Win32 call!
+            }
+
+            _lastRoomSymbol[row, col] = symbol;
+            _lastRoomColor[row, col] = color;
+
+            SafeWriteCell(_roomLeft + col, _roomTop + row, symbol, color);
+        }
+
+        private void SafeWriteCell(int left, int top, object symbol, ConsoleColor color)
+        {
+            try
+            {
+                if (left >= 0 && top >= 0 && left < Console.BufferWidth && top < Console.BufferHeight)
+                {
+                    Console.SetCursorPosition(left, top);
+                    Console.ForegroundColor = color;
+                    Console.Write(symbol);
+                    Console.ResetColor();
+                }
+            }
+            catch
+            {
+                // Silently skip out-of-bounds cell draws
+            }
+        }
+
         public void Initialize(GameState gameState, int localPlayerIndex, string instructions)
         {
             _gameState = gameState;
@@ -51,7 +126,8 @@ namespace RPG_Game.MVC_Pattern.View
                 _gameState.NotificationAdded += NotificationHandler;
             }
 
-            Console.Clear();
+            ResetCaches();
+            try { Console.Clear(); } catch { }
             DrawRoom();
             DrawPlayerStats();
             DrawInstructions(instructions);
@@ -60,23 +136,20 @@ namespace RPG_Game.MVC_Pattern.View
             DrawCellStats();
             DrawActivePotionEffects();
             DrawNearbyEnemies();
-        }  // changed
+        }
+
         public void InitializeNotificationsPanel()
         {
-            Console.SetCursorPosition(_notificationsLeft, _notificationsTop);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("=== Notifications ===".PadRight(30));
-            Console.ResetColor();
-        } // added
-        public void DrawRoom()  // changed 
+            SafeWriteAt(_notificationsLeft, _notificationsTop, "=== Notifications ===".PadRight(30), ConsoleColor.Yellow);
+        }
+
+        public void DrawRoom()
         {
             if (_gameState == null) return;
-
             Room room = _gameState.Room;
 
             for (int i = 0; i < room.Height; i++)
             {
-                Console.SetCursorPosition(_roomLeft, _roomTop + i);
                 for (int j = 0; j < room.Width; j++)
                 {
                     bool anyOther = false;
@@ -85,9 +158,8 @@ namespace RPG_Game.MVC_Pattern.View
                         Player pl = _gameState.Players[playerIdx];
                         if (pl.X == i && pl.Y == j)
                         {
-                            Console.ForegroundColor = (playerIdx == _localPlayerIdx) ? ConsoleColor.DarkYellow : ConsoleColor.DarkCyan;
-                            Console.Write($"{playerIdx + 1}"); 
-                            Console.ResetColor();
+                            ConsoleColor color = (playerIdx == _localPlayerIdx) ? ConsoleColor.DarkYellow : ConsoleColor.DarkCyan;
+                            SafeWriteRoomCell(i, j, $"{playerIdx + 1}", color);
                             anyOther = true;
                             break;
                         }
@@ -97,254 +169,197 @@ namespace RPG_Game.MVC_Pattern.View
 
                     if (room.Grid[i, j].Enemy != null)
                     {
-                        Console.ForegroundColor = room!.Grid[i, j].Enemy!.Color;
-                        Console.Write(room!.Grid[i, j].Enemy!.Symbol);
-                        Console.ResetColor();
+                        SafeWriteRoomCell(i, j, room.Grid[i, j].Enemy!.Symbol.ToString(), room.Grid[i, j].Enemy!.Color);
                     }
-
                     else if (room.Grid[i, j].isWall == true)
                     {
-                        Console.ForegroundColor = ConsoleColor.DarkGray;
-                        Console.Write("█");
-                        Console.ResetColor();
+                        SafeWriteRoomCell(i, j, "█", ConsoleColor.DarkGray);
                     }
-
                     else
                     {
                         IItem? topItem = room.Grid[i, j].GetTopItem();
                         if (topItem != null)
                         {
-                            Console.ForegroundColor = topItem.ConsoleColor;
-                            Console.Write(topItem.Symbol);
-                            Console.ResetColor();
+                            SafeWriteRoomCell(i, j, topItem.Symbol.ToString(), topItem.ConsoleColor);
                         }
-                        else Console.Write(" ");
+                        else
+                        {
+                            SafeWriteRoomCell(i, j, " ", ConsoleColor.Gray);
+                        }
                     }
                 }
-                Console.ResetColor();
             }
         }
+
         public void UpdateMapCells(int oldX, int oldY, int newX, int newY, Room room, Player player)
         {
             RedrawRoomCell(oldX, oldY, room, player);
             RedrawRoomCell(newX, newY, room, player);
-        } // TODO
+        }
+
         private void RedrawRoomCell(int row, int col, Room room, Player player)
         {
-            Console.SetCursorPosition(_roomLeft + col, _roomTop + row);
             if (row == player.X && col == player.Y)
             {
-                Console.ForegroundColor = ConsoleColor.DarkYellow;
-                Console.OutputEncoding = Encoding.UTF8;
-                Console.Write("¶");
-                Console.ResetColor();
+                SafeWriteRoomCell(row, col, "¶", ConsoleColor.DarkYellow);
             }
-
             else if (room.Grid[row, col].Enemy != null)
             {
-                Console.ForegroundColor = room!.Grid[row, col].Enemy!.Color;
-                Console.Write(room!.Grid[row, col].Enemy!.Symbol);
-                Console.ResetColor();
+                SafeWriteRoomCell(row, col, room.Grid[row, col].Enemy!.Symbol.ToString(), room.Grid[row, col].Enemy!.Color);
             }
-
             else if (room.Grid[row, col].isWall == true)
             {
-                Console.ForegroundColor = ConsoleColor.DarkGray;
-                Console.Write("█");
-                Console.ResetColor();
+                SafeWriteRoomCell(row, col, "█", ConsoleColor.DarkGray);
             }
-
             else
             {
                 IItem? topItem = room.Grid[row, col].GetTopItem();
                 if (topItem != null)
                 {
-                    Console.ForegroundColor = topItem.ConsoleColor;
-                    Console.Write(topItem.Symbol);
-                    Console.ResetColor();
+                    SafeWriteRoomCell(row, col, topItem.Symbol.ToString(), topItem.ConsoleColor);
                 }
-                else Console.Write(" ");
+                else
+                {
+                    SafeWriteRoomCell(row, col, " ", ConsoleColor.Gray);
+                }
             }
-        } // TODO
-        public void DrawPlayerStats() // changed
+        }
+
+        public void DrawPlayerStats()
         {
             if (_gameState == null) return;
             Player player = _gameState.Players[_localPlayerIdx];
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
             int row = _playerStatsTop;
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine("=== Player Stats ===");
-            Console.ResetColor();
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Health: {player.Health} / {player.GetMaxHealth}".PadRight(25));
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Strength: {player.Strength}".PadRight(25));
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Dexterity: {player.Dexterity}".PadRight(25));
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Luck: {player.Luck}".PadRight(25));
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Aggression: {player.Aggression}".PadRight(25));
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Wisdom: {player.Wisdom}".PadRight(25));
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.WriteLine($"Coins: {player.Coins}  Gold: {player.Gold}".PadRight(25));
+            SafeWriteAt(_playerStatsLeft, row++, "=== Player Stats ===", ConsoleColor.Yellow);
+            SafeWriteAt(_playerStatsLeft, row++, $"Health: {player.Health} / {player.GetMaxHealth}".PadRight(25));
+            SafeWriteAt(_playerStatsLeft, row++, $"Strength: {player.Strength}".PadRight(25));
+            SafeWriteAt(_playerStatsLeft, row++, $"Dexterity: {player.Dexterity}".PadRight(25));
+            SafeWriteAt(_playerStatsLeft, row++, $"Luck: {player.Luck}".PadRight(25));
+            SafeWriteAt(_playerStatsLeft, row++, $"Aggression: {player.Aggression}".PadRight(25));
+            SafeWriteAt(_playerStatsLeft, row++, $"Wisdom: {player.Wisdom}".PadRight(25));
+            SafeWriteAt(_playerStatsLeft, row++, $"Coins: {player.Coins}  Gold: {player.Gold}".PadRight(25));
             row++;
 
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("=== Equipped Items ===".PadRight(57));
-            Console.ResetColor();
+            SafeWriteAt(_playerStatsLeft, row++, "=== Equipped Items ===".PadRight(57), ConsoleColor.Yellow);
 
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            string leftHandText = "empty";
-            if (player.LeftHand != null)
-            {
-                leftHandText = player.LeftHand.GetDisplayName();
-            }
-            Console.WriteLine($"Left Hand: {leftHandText}".PadRight(57));
+            string leftHandText = player.LeftHand != null ? player.LeftHand.GetDisplayName() : "empty";
+            SafeWriteAt(_playerStatsLeft, row++, $"Left Hand: {leftHandText}".PadRight(57));
 
-            Console.SetCursorPosition(_playerStatsLeft, row++);
-            string rightHandText = "empty";
-            if (player.RightHand != null)
-            {
-                rightHandText = player.RightHand.GetDisplayName();
-            }
-            Console.WriteLine($"Right Hand: {rightHandText}".PadRight(57));
+            string rightHandText = player.RightHand != null ? player.RightHand.GetDisplayName() : "empty";
+            SafeWriteAt(_playerStatsLeft, row++, $"Right Hand: {rightHandText}".PadRight(57));
 
             int startRow = row;
             for (int i = 0; i < 13; i++)
             {
-                Console.SetCursorPosition(_playerStatsLeft, startRow + i);
-                Console.WriteLine("".PadRight(57));
+                SafeWriteAt(_playerStatsLeft, startRow + i, "".PadRight(57));
             }
-            Console.SetCursorPosition(_playerStatsLeft, row += 2);
+            row += 2;
             if (player.Inventory.Count == 0)
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("=== Player's inventory ===".PadRight(57));
-                Console.ResetColor();
+                SafeWriteAt(_playerStatsLeft, row, "=== Player's inventory ===".PadRight(57), ConsoleColor.Yellow);
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine("=== Player's inventory ===".PadRight(57));
-                Console.ResetColor();
-                Console.SetCursorPosition(_playerStatsLeft, row++);
+                SafeWriteAt(_playerStatsLeft, row++, "=== Player's inventory ===".PadRight(57), ConsoleColor.Yellow);
                 for (int i = 0; i < player.Inventory.Count; i++)
                 {
-                    Console.SetCursorPosition(_playerStatsLeft, row++);
                     string displayName = player.Inventory[i].GetDisplayName();
-                    Console.WriteLine($"{i + 1}) {displayName}".PadRight(57));
+                    SafeWriteAt(_playerStatsLeft, row++, $"{i + 1}) {displayName}".PadRight(57));
                 }
             }
         }
+
         public void AddNotification(string message)
         {
             if (_notifications.Count > 5)
                 _notifications.RemoveAt(0);
             _notifications.Add(message);
             DrawNotifications();
-        } // no changes
+        }
+
         public void ClearNotifications()
         {
             _notifications.Clear();
-        } // no changes
+        }
+
         public void DrawNotifications()
         {
             for (int i = 1; i < 10; i++)
             {
-                Console.SetCursorPosition(_notificationsLeft, _notificationsTop + i);
-                Console.WriteLine("".PadRight(99));
+                SafeWriteAt(_notificationsLeft, _notificationsTop + i, "".PadRight(99));
             }
 
             int row = _notificationsTop;
-            Console.SetCursorPosition(_notificationsLeft, row++);
+            SafeWriteAt(_notificationsLeft, row++, "=== Notifications ===".PadRight(30), ConsoleColor.Yellow);
             foreach (string message in _notifications)
             {
-                Console.SetCursorPosition(_notificationsLeft, row++);
-                Console.WriteLine(message.PadRight(99));
+                SafeWriteAt(_notificationsLeft, row++, message.PadRight(99));
             }
-        } // no changes
+        }
+
         public void DrawInstructions(string instructions)
         {
             int row = _instructionsTop;
             int col = _instructionsLeft;
 
-            Console.SetCursorPosition(col, row++);
-            Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("=== Instructions ===");
-            Console.ResetColor();
+            SafeWriteAt(col, row++, "=== Instructions ===", ConsoleColor.Yellow);
 
             var lines = instructions.Split('\n');
             foreach (var line in lines)
             {
                 if (!string.IsNullOrWhiteSpace(line))
                 {
-                    Console.SetCursorPosition(col, row++);
-                    Console.WriteLine(line.Trim());
+                    SafeWriteAt(col, row++, line.Trim());
                 }
             }
-        } // no changes
+        }
+
         public void DrawGameStats()
         {
             if (_gameState == null) return;
             Player player = _gameState.Players[_localPlayerIdx];
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
             int row = _gameStatsTop;
-            Console.SetCursorPosition(_gameStatsLeft, row++);
-            Console.WriteLine("=== Game Stats ===".PadRight(30));
-            Console.ResetColor();
-            Console.SetCursorPosition(_gameStatsLeft, row++);
-            Console.WriteLine($"Current Tile: ({player.X}, {player.Y})".PadRight(30));
-            Console.SetCursorPosition(_gameStatsLeft, row++);
-            Console.WriteLine($"Step Counter: {_gameState.StepCounter}");
-            //_stepCount++;
-        } // changed
+            SafeWriteAt(_gameStatsLeft, row++, "=== Game Stats ===".PadRight(30), ConsoleColor.Yellow);
+            SafeWriteAt(_gameStatsLeft, row++, $"Current Tile: ({player.X}, {player.Y})".PadRight(30));
+            SafeWriteAt(_gameStatsLeft, row++, $"Step Counter: {_gameState.StepCounter}");
+        }
+
         public void DrawCellStats()
         {
             if (_gameState == null) return;
             Cell cell = _gameState.Room.GetCell(_gameState.Players[_localPlayerIdx].X, _gameState.Players[_localPlayerIdx].Y);
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
             int row = _cellStatsTop;
-            Console.SetCursorPosition(_cellStatsLeft, row++);
-            Console.WriteLine("=== Current Cell Stats ===".PadRight(56));
-            Console.ResetColor();
+            SafeWriteAt(_cellStatsLeft, row++, "=== Current Cell Stats ===".PadRight(56), ConsoleColor.Yellow);
             int startRow = row;
             for (int i = 0; i < 15; i++)
             {
-                Console.SetCursorPosition(_cellStatsLeft, startRow + i);
-                Console.WriteLine("".PadRight(56));
+                SafeWriteAt(_cellStatsLeft, startRow + i, "".PadRight(56));
             }
             if (cell.Items.Count > 0)
             {
                 for (int i = 0; i < cell.Items.Count; i++)
                 {
-                    Console.SetCursorPosition(_cellStatsLeft, row++);
                     string displayName = cell.Items[i].GetDisplayName();
-                    Console.WriteLine($"{i + 1}) {displayName}".PadRight(56));
+                    SafeWriteAt(_cellStatsLeft, row++, $"{i + 1}) {displayName}".PadRight(56));
                 }
             }
-        }  // changed
+        }
+
         public void DrawActivePotionEffects()
         {
             if (_gameState == null) return;
             Player player = _gameState.Players[_localPlayerIdx];
 
-            Console.ForegroundColor = ConsoleColor.Yellow;
             int row = _activePotionsTop;
-            Console.SetCursorPosition(_activePotionsLeft, row++);
-            Console.WriteLine("=== Active Potion Effects ===".PadRight(56));
-            Console.ResetColor();
+            SafeWriteAt(_activePotionsLeft, row++, "=== Active Potion Effects ===".PadRight(56), ConsoleColor.Yellow);
 
             int startRow = row;
             for (int i = 0; i < 10; i++)
             {
-                Console.SetCursorPosition(_activePotionsLeft, startRow + i);
-                Console.WriteLine("".PadRight(56));
+                SafeWriteAt(_activePotionsLeft, startRow + i, "".PadRight(56));
             }
 
             List<PotionEffectBaseClass> activeEffects = player.activeEffects;
@@ -352,11 +367,11 @@ namespace RPG_Game.MVC_Pattern.View
             {
                 for (int i = 0; i < activeEffects.Count; i++)
                 {
-                    Console.SetCursorPosition(_activePotionsLeft, row++);
-                    Console.WriteLine($"{i + 1}) {activeEffects[i].ToString()}".PadRight(56));
+                    SafeWriteAt(_activePotionsLeft, row++, $"{i + 1}) {activeEffects[i].ToString()}".PadRight(56));
                 }
             }
-        } // changed
+        }
+
         public void DrawNearbyEnemies()
         {
             if (_gameState == null) return;
@@ -366,40 +381,36 @@ namespace RPG_Game.MVC_Pattern.View
             IEnemy? down = player.nearbyEnemies[EnumClasses.Direction.Down];
             IEnemy? left = player.nearbyEnemies[EnumClasses.Direction.Left];
             IEnemy? right = player.nearbyEnemies[EnumClasses.Direction.Right];
-            Console.ForegroundColor = ConsoleColor.Yellow;
+
             int row = _enemyInfoTop;
-            Console.SetCursorPosition(_enemyInfoLeft, row++);
-            Console.WriteLine("=== Nearby enemies ===");
-            Console.ResetColor();
-            Console.SetCursorPosition(_enemyInfoLeft, row++);
+            SafeWriteAt(_enemyInfoLeft, row++, "=== Nearby enemies ===", ConsoleColor.Yellow);
+
             if (up != null)
-            {
-                Console.WriteLine($"Up: {up.Name}  {up.Health}/{up.MaxHealth} HP".PadRight(26));
-            }
-            else Console.WriteLine($"Up: nobody".PadRight(26));
-            Console.SetCursorPosition(_enemyInfoLeft, row++);
+                SafeWriteAt(_enemyInfoLeft, row++, $"Up: {up.Name}  {up.Health}/{up.MaxHealth} HP".PadRight(26));
+            else
+                SafeWriteAt(_enemyInfoLeft, row++, "Up: nobody".PadRight(26));
+
             if (down != null)
-            {
-                Console.WriteLine($"Down: {down.Name}  {down.Health}/{down.MaxHealth} HP".PadRight(26));
-            }
-            else Console.WriteLine($"Down: nobody".PadRight(26));
-            Console.SetCursorPosition(_enemyInfoLeft, row++);
+                SafeWriteAt(_enemyInfoLeft, row++, $"Down: {down.Name}  {down.Health}/{down.MaxHealth} HP".PadRight(26));
+            else
+                SafeWriteAt(_enemyInfoLeft, row++, "Down: nobody".PadRight(26));
+
             if (left != null)
-            {
-                Console.WriteLine($"Left: {left.Name}  {left.Health}/{left.MaxHealth} HP".PadRight(26));
-            }
-            else Console.WriteLine("Left: nobody".PadRight(26));
-            Console.SetCursorPosition(_enemyInfoLeft, row++);
+                SafeWriteAt(_enemyInfoLeft, row++, $"Left: {left.Name}  {left.Health}/{left.MaxHealth} HP".PadRight(26));
+            else
+                SafeWriteAt(_enemyInfoLeft, row++, "Left: nobody".PadRight(26));
+
             if (right != null)
-            {
-                Console.WriteLine($"Right: {right.Name}  {right.Health}/{right.MaxHealth} HP".PadRight(26));
-            }
-            else Console.WriteLine("Right: nobody".PadRight(26));
-        } // changed
+                SafeWriteAt(_enemyInfoLeft, row++, $"Right: {right.Name}  {right.Health}/{right.MaxHealth} HP".PadRight(26));
+            else
+                SafeWriteAt(_enemyInfoLeft, row++, "Right: nobody".PadRight(26));
+        }
+
         private void NotificationHandler(string message)
         {
             AddNotification(message);
-        } // event handler method added
+        }
+
         private void StateChangedHandler(object? sender, EventArgs eventArgs)
         {
             DrawRoom();
@@ -408,6 +419,6 @@ namespace RPG_Game.MVC_Pattern.View
             DrawCellStats();
             DrawActivePotionEffects();
             DrawNearbyEnemies();
-        } // event handler method added
+        }
     }
 }
